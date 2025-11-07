@@ -1,0 +1,3145 @@
+<!doctype html>
+<html lang="pt-BR">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Anatomia">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#667eea">
+  <title>Revisão de Anatomia Humana</title>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        .trail-container {
+            background: linear-gradient(135deg, #fce7f3 0%, #e0e7ff 50%, #ecfdf5 100%);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            color: #374151;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+        
+        .walking-trail {
+            position: relative;
+            background: linear-gradient(90deg, #8b5cf6 0%, #06b6d4 50%, #10b981 100%);
+            border-radius: 20px;
+            padding: 40px 20px;
+            margin: 30px 0;
+            min-height: 200px;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+        
+        .trail-path {
+            position: relative;
+            display: flex;
+            align-items: center;
+            min-width: 100%;
+            height: 120px;
+            background: repeating-linear-gradient(
+                90deg,
+                rgba(255,255,255,0.1) 0px,
+                rgba(255,255,255,0.1) 20px,
+                transparent 20px,
+                transparent 40px
+            );
+            border-radius: 60px;
+            border: 3px dashed rgba(255,255,255,0.3);
+        }
+        
+        .step-marker {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            border: 4px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: all 0.5s ease;
+            cursor: pointer;
+            z-index: 10;
+        }
+        
+        .step-marker.active {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            transform: scale(1.2);
+            animation: pulse 2s infinite;
+        }
+        
+        .step-marker.completed {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            transform: scale(0.9);
+        }
+        
+        .step-marker.locked {
+            background: #6b7280;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4); }
+            50% { box-shadow: 0 4px 20px rgba(16, 185, 129, 0.8); }
+        }
+        
+        .walking-character {
+            position: absolute;
+            font-size: 40px;
+            transition: all 1s ease-in-out;
+            z-index: 20;
+            animation: walk 2s infinite;
+            top: 40px;
+        }
+        
+        @keyframes walk {
+            0%, 100% { transform: translateY(0px) rotate(-5deg); }
+            50% { transform: translateY(-8px) rotate(5deg); }
+        }
+        
+        .trail-progress-line {
+            position: absolute;
+            top: 50%;
+            left: 30px;
+            height: 6px;
+            background: linear-gradient(90deg, #10b981 0%, #3b82f6 100%);
+            border-radius: 3px;
+            transition: width 1s ease;
+            z-index: 5;
+        }
+        
+        .step-tooltip {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .step-marker:hover .step-tooltip {
+            opacity: 1;
+        }
+        
+        .footsteps {
+            position: absolute;
+            top: 70px;
+            font-size: 16px;
+            color: rgba(255,255,255,0.6);
+            animation: fadeFootsteps 3s ease-out forwards;
+        }
+        
+        @keyframes fadeFootsteps {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.8); }
+        }
+        
+        @keyframes float {
+            0%, 100% { 
+                transform: translateX(-50%) translateY(0px); 
+                opacity: 0.7;
+            }
+            50% { 
+                transform: translateX(-50%) translateY(-10px); 
+                opacity: 1;
+            }
+        }
+        
+        .thought-cloud-happy {
+            animation: float 2s ease-in-out infinite, glow 2s ease-in-out infinite;
+        }
+        
+        .thought-cloud-thinking {
+            animation: float 3s ease-in-out infinite;
+            opacity: 0.8;
+        }
+        
+        .thought-cloud-confused {
+            animation: float 1.5s ease-in-out infinite, shake 0.5s ease-in-out infinite;
+        }
+        
+        @keyframes glow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3) drop-shadow(0 0 10px rgba(16, 185, 129, 0.5)); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(-50%) rotate(0deg); }
+            25% { transform: translateX(-50%) rotate(-2deg); }
+            75% { transform: translateX(-50%) rotate(2deg); }
+        }
+        
+        .word-bank {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin: 24px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+        }
+        
+        .word-chip {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            user-select: none;
+        }
+        
+        .word-chip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+        
+        .word-chip.selected {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            border-color: #fbbf24;
+            transform: scale(1.05);
+        }
+        
+        .word-chip.used {
+            background: #6b7280;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        
+        .answer-trail {
+            min-height: 80px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #1e293b;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 3px dashed #cbd5e1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            position: relative;
+        }
+        
+        .answer-trail.has-words {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+        
+        .answer-word {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .answer-word:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+        }
+        
+        .trail-placeholder {
+            color: #64748b;
+            font-style: italic;
+            text-align: center;
+            width: 100%;
+            padding: 20px;
+        }
+        
+        .connection-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, #10b981, #3b82f6);
+            z-index: 1;
+            border-radius: 1px;
+            animation: drawLine 0.5s ease;
+        }
+        
+        @keyframes drawLine {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        
+        .difficulty-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        .difficulty-easy { background-color: #10b981; }
+        .difficulty-medium { background-color: #f59e0b; }
+        .difficulty-hard { background-color: #ef4444; }
+        
+        .category-badge {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .points-badge {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 700;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 20px 0;
+        }
+        
+        .card-question {
+            font-size: 18px;
+            line-height: 1.6;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+        
+        .card-answer {
+            font-size: 16px;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .game-card.flipped:hover {
+            transform: rotateY(180deg) translateY(-8px) scale(1.02);
+        }
+        
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .correct-answer {
+            background-color: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 12px;
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        
+        /* Floating Balls */
+        .floating-balls {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .ball-float {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: floatBall 20s infinite linear;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+        }
+        
+        .ball-blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .ball-green { background: linear-gradient(135deg, #10b981, #059669); }
+        .ball-purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .ball-orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .ball-pink { background: linear-gradient(135deg, #ec4899, #db2777); }
+        .ball-cyan { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+        .ball-yellow { background: linear-gradient(135deg, #eab308, #ca8a04); }
+        .ball-red { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .ball-indigo { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+        .ball-teal { background: linear-gradient(135deg, #14b8a6, #0d9488); }
+        .ball-lime { background: linear-gradient(135deg, #84cc16, #65a30d); }
+        .ball-violet { background: linear-gradient(135deg, #a855f7, #9333ea); }
+        
+        @keyframes floatBall {
+            0% {
+                transform: translateY(100vh) translateX(0px) scale(0.5);
+                opacity: 0;
+            }
+            5% {
+                opacity: 0.7;
+            }
+            50% {
+                transform: translateY(50vh) translateX(20px) scale(1);
+                opacity: 0.8;
+            }
+            95% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) translateX(-20px) scale(0.5);
+                opacity: 0;
+            }
+        }
+        
+        /* Floating Header */
+        .floating-header {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(14, 165, 233, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 16px 24px;
+            color: white;
+            z-index: 100;
+            box-shadow: 0 8px 32px rgba(14, 165, 233, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 90vw;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .header-title-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .header-icon {
+            font-size: 32px;
+        }
+        
+        .floating-header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0;
+            line-height: 1.2;
+        }
+        
+        .floating-header h2 {
+            font-size: 14px;
+            font-weight: 500;
+            margin: 0;
+            opacity: 0.9;
+        }
+        
+        .compact-stats {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .stat-icon {
+            font-size: 16px;
+        }
+        
+        .thought-bubble {
+            position: relative;
+        }
+        
+        .thought-bubble #thought-cloud {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        /* Main Game Area */
+        .game-main {
+            padding-top: 120px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .trail-grid {
+            max-width: 1200px;
+            width: 100%;
+            padding: 20px;
+        }
+        
+        .trail-header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .trail-header h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .trail-header p {
+            font-size: 16px;
+            margin: 0;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        /* Scattered Cards Layout */
+        .trail-path-container {
+            position: relative;
+            width: 100%;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            margin: 30px 0;
+            overflow: visible;
+        }
+        
+        .trail-path {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            background: radial-gradient(
+                ellipse at center,
+                rgba(255, 182, 193, 0.2) 0%,
+                rgba(221, 160, 221, 0.2) 25%,
+                rgba(173, 216, 230, 0.2) 50%,
+                rgba(144, 238, 144, 0.2) 75%,
+                rgba(255, 218, 185, 0.2) 100%
+            );
+            border-radius: 30px;
+            border: 3px dashed rgba(255, 255, 255, 0.4);
+            box-shadow: 
+                0 0 40px rgba(255, 255, 255, 0.1),
+                inset 0 0 40px rgba(255, 255, 255, 0.05);
+            overflow: visible;
+        }
+        
+        .trail-house {
+            position: absolute;
+            width: 80px;
+            height: 100px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 
+                0 8px 24px rgba(0, 0, 0, 0.15),
+                0 0 15px rgba(102, 126, 234, 0.3),
+                inset 0 2px 8px rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            transform-origin: center;
+            animation: float 4s ease-in-out infinite;
+            z-index: 5;
+        }
+        
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0px) scale(1);
+                box-shadow: 
+                    0 12px 32px rgba(0, 0, 0, 0.3),
+                    0 0 20px rgba(102, 126, 234, 0.4),
+                    inset 0 2px 10px rgba(255, 255, 255, 0.2);
+            }
+            50% { 
+                transform: translateY(-8px) scale(1.02);
+                box-shadow: 
+                    0 20px 40px rgba(0, 0, 0, 0.4),
+                    0 0 30px rgba(102, 126, 234, 0.6),
+                    inset 0 2px 15px rgba(255, 255, 255, 0.3);
+            }
+        }
+        
+        .trail-house:hover {
+            transform: translateY(-15px) scale(1.15) rotate(5deg);
+            box-shadow: 
+                0 25px 50px rgba(102, 126, 234, 0.6),
+                0 0 40px rgba(255, 255, 255, 0.4),
+                inset 0 4px 20px rgba(255, 255, 255, 0.4);
+            border-color: rgba(255, 255, 255, 0.8);
+            z-index: 10;
+            animation: none;
+        }
+        
+        .trail-house.completed {
+            background: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 100%);
+            box-shadow: 
+                0 8px 24px rgba(16, 185, 129, 0.3),
+                0 0 20px rgba(16, 185, 129, 0.2),
+                inset 0 2px 8px rgba(255, 255, 255, 0.4);
+            border-color: rgba(16, 185, 129, 0.8);
+            animation: completedPulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes completedPulse {
+            0%, 100% { 
+                box-shadow: 
+                    0 8px 24px rgba(16, 185, 129, 0.3),
+                    0 0 20px rgba(16, 185, 129, 0.2),
+                    inset 0 2px 8px rgba(255, 255, 255, 0.4);
+            }
+            50% { 
+                box-shadow: 
+                    0 12px 32px rgba(16, 185, 129, 0.4),
+                    0 0 25px rgba(16, 185, 129, 0.3),
+                    inset 0 2px 12px rgba(255, 255, 255, 0.5);
+            }
+        }
+        
+        .trail-house.completed:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 
+                0 16px 40px rgba(16, 185, 129, 0.4),
+                0 0 30px rgba(16, 185, 129, 0.3),
+                inset 0 4px 16px rgba(255, 255, 255, 0.6);
+            animation: none;
+        }
+        
+        .trail-house.incorrect {
+            background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
+            box-shadow: 
+                0 8px 24px rgba(245, 158, 11, 0.3),
+                0 0 20px rgba(245, 158, 11, 0.2),
+                inset 0 2px 8px rgba(255, 255, 255, 0.4);
+            border-color: rgba(245, 158, 11, 0.8);
+            animation: incorrectShake 4s ease-in-out infinite;
+        }
+        
+        @keyframes incorrectShake {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-1px) rotate(0.5deg); }
+            75% { transform: translateY(-1px) rotate(-0.5deg); }
+        }
+        
+        .trail-house.incorrect:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 
+                0 16px 40px rgba(245, 158, 11, 0.4),
+                0 0 30px rgba(245, 158, 11, 0.3),
+                inset 0 4px 16px rgba(255, 255, 255, 0.6);
+            animation: none;
+        }
+        
+        .house-number {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 2px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .house-category {
+            font-size: 8px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 4px;
+            border-radius: 8px;
+            margin-bottom: 2px;
+            max-width: 70px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .house-icon {
+            font-size: 16px;
+        }
+        
+        .house-status {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Walking Character - Centered in scattered layout */
+        .walking-character {
+            position: absolute;
+            font-size: 36px;
+            transition: all 1s ease-in-out;
+            z-index: 20;
+            animation: walkFloat 3s ease-in-out infinite;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.5));
+        }
+        
+        @keyframes walkFloat {
+            0%, 100% { 
+                transform: translateY(-50%) scale(1) rotate(0deg);
+                filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.5));
+            }
+            50% { 
+                transform: translateY(-50%) scale(1.1) rotate(5deg);
+                filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.8));
+            }
+        }
+        
+        @keyframes victoryGlow {
+            0%, 100% { 
+                filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.8));
+            }
+            50% { 
+                filter: drop-shadow(0 0 50px rgba(255, 215, 0, 1));
+            }
+        }
+        
+        /* Game Controls */
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .control-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .shuffle-btn {
+            background: rgba(245, 158, 11, 0.9);
+            color: white;
+        }
+        
+        .shuffle-btn:hover {
+            background: rgba(245, 158, 11, 1);
+            transform: translateY(-2px);
+        }
+        
+        .reset-btn {
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+        }
+        
+        .reset-btn:hover {
+            background: rgba(239, 68, 68, 1);
+            transform: translateY(-2px);
+        }
+        
+        /* Card Modal */
+        .card-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        .card-modal-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+        
+        .card-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 80vh;
+            max-height: 700px;
+            perspective: 1000px;
+        }
+        
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 24px;
+            color: white;
+            backface-visibility: hidden;
+            transition: transform 0.6s ease;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .card-back {
+            transform: rotateY(180deg);
+        }
+        
+        .card-container.flipped .card-front {
+            transform: rotateY(-180deg);
+        }
+        
+        .card-container.flipped .card-back {
+            transform: rotateY(0deg);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .card-category, .card-points {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .card-difficulty {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
+        .card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .card-content h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .card-content p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .flip-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: auto;
+        }
+        
+        .flip-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .close-card-btn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            border: none;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close-card-btn:hover {
+            background: rgba(239, 68, 68, 1);
+            transform: scale(1.1);
+        }
+        
+        /* Card Game Area */
+        .card-game-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-game-area h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .card-controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .card-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .clear-btn {
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+        }
+        
+        .check-btn {
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+        }
+        
+        .hint-btn {
+            background: rgba(245, 158, 11, 0.9);
+            color: white;
+        }
+        
+        .card-btn:hover {
+            transform: translateY(-1px);
+            opacity: 1;
+        }
+        
+        /* Result Modal */
+        .result-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+        
+        .result-modal-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+        }
+        
+        .result-content-wrapper {
+            position: relative;
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .result-continue-btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .result-continue-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
+        }
+        
+        /* Mobile-First Responsive Design */
+        
+        /* Touch-friendly interactions */
+        .trail-house, .word-chip, .answer-word, .control-btn, .card-btn, .flip-btn {
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        
+        /* Prevent zoom on input focus */
+        input, textarea, select {
+            font-size: 16px;
+        }
+        
+        /* Safe area handling for iOS */
+        body {
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+        
+        /* Base mobile styles (320px+) */
+        .floating-header {
+            position: fixed;
+            top: env(safe-area-inset-top, 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(14, 165, 233, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 12px 16px;
+            color: white;
+            z-index: 100;
+            box-shadow: 0 8px 32px rgba(14, 165, 233, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: calc(100vw - 20px);
+            width: auto;
+            min-width: 280px;
+        }
+        
+        /* Mobile trail house adjustments */
+        @media (max-width: 767px) {
+            .trail-house {
+                width: 80px;
+                height: 100px;
+            }
+            
+            .trail-path {
+                gap: 12px;
+                padding: 15px 20px;
+                height: 150px;
+            }
+            
+            .trail-path-container {
+                min-height: 250px;
+                padding: 20px 10px;
+            }
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .header-title-section {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .header-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .floating-header h1 {
+            font-size: 14px;
+            font-weight: 700;
+            margin: 0;
+            line-height: 1.2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .floating-header h2 {
+            font-size: 11px;
+            font-weight: 500;
+            margin: 0;
+            opacity: 0.9;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .compact-stats {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+        
+        .stat-icon {
+            font-size: 12px;
+        }
+        
+        .game-main {
+            padding-top: calc(env(safe-area-inset-top, 0px) + 80px);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        
+        .trail-grid {
+            max-width: 100%;
+            width: 100%;
+            padding: 10px;
+        }
+        
+        .trail-header {
+            text-align: center;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .trail-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 0 6px 0;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .trail-header p {
+            font-size: 13px;
+            margin: 0;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .trail-path-container {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 10px;
+            margin: 20px 0;
+            overflow: visible;
+        }
+        
+        .trail-path {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                rgba(16, 185, 129, 0.3) 0deg,
+                rgba(59, 130, 246, 0.3) 90deg,
+                rgba(245, 158, 11, 0.3) 180deg,
+                rgba(239, 68, 68, 0.3) 270deg,
+                rgba(16, 185, 129, 0.3) 360deg
+            );
+            border: 3px dashed rgba(255, 255, 255, 0.4);
+            box-shadow: 
+                0 0 30px rgba(255, 255, 255, 0.1),
+                inset 0 0 30px rgba(255, 255, 255, 0.05);
+            animation: rotateTrail 60s linear infinite;
+        }
+        
+        .trail-house {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 3px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 
+                0 8px 24px rgba(0, 0, 0, 0.3),
+                0 0 15px rgba(102, 126, 234, 0.4),
+                inset 0 2px 8px rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            transform-origin: center;
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        .house-number {
+            font-size: 10px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .house-category {
+            font-size: 5px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1px 2px;
+            border-radius: 4px;
+            margin-bottom: 1px;
+            max-width: 40px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .house-icon {
+            font-size: 8px;
+        }
+        
+        .house-status {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .walking-character {
+            position: absolute;
+            font-size: 24px;
+            transition: all 1s ease-in-out;
+            z-index: 20;
+            animation: centerFloat 3s ease-in-out infinite;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.5));
+        }
+        
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .control-btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            min-height: 44px;
+            min-width: 44px;
+        }
+        
+        /* Card Modal Mobile Optimization */
+        .card-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 10px;
+        }
+        
+        .card-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: calc(100vh - 20px);
+            max-height: calc(100vh - 20px);
+            perspective: 1000px;
+        }
+        
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 16px;
+            color: white;
+            backface-visibility: hidden;
+            transition: transform 0.6s ease;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        
+        .card-category, .card-points {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        
+        .card-difficulty {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+        
+        .card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .card-content h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        
+        .card-content p {
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            text-align: left;
+        }
+        
+        .flip-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: auto;
+            flex-shrink: 0;
+            min-height: 44px;
+            font-size: 14px;
+        }
+        
+        .close-card-btn {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            border: none;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+        
+        /* Word Bank Mobile Optimization */
+        .word-bank {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 8px;
+            margin: 16px 0;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            max-height: 200px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .word-chip {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 600;
+            font-size: 11px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            user-select: none;
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .answer-trail {
+            min-height: 60px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #1e293b;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 12px 0;
+            border: 3px dashed #cbd5e1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+            position: relative;
+            max-height: 120px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .answer-word {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 11px;
+            min-height: 28px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-controls {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .card-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 36px;
+            min-width: 60px;
+        }
+        
+        /* Result Modal Mobile */
+        .result-content-wrapper {
+            position: relative;
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            max-width: calc(100vw - 20px);
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .result-continue-btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 16px;
+            transition: all 0.3s ease;
+            min-height: 44px;
+            font-size: 14px;
+        }
+        
+        /* Toast Mobile */
+        .toast {
+            position: fixed;
+            top: calc(env(safe-area-inset-top, 0px) + 20px);
+            right: 10px;
+            left: 10px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        /* Tablet Styles (768px+) */
+        @media (min-width: 768px) {
+            .floating-header {
+                padding: 16px 24px;
+                border-radius: 20px;
+                max-width: 90vw;
+                min-width: 400px;
+            }
+            
+            .header-content {
+                gap: 24px;
+            }
+            
+            .header-icon {
+                font-size: 32px;
+            }
+            
+            .floating-header h1 {
+                font-size: 20px;
+            }
+            
+            .floating-header h2 {
+                font-size: 14px;
+            }
+            
+            .compact-stats {
+                gap: 16px;
+            }
+            
+            .stat-item {
+                font-size: 14px;
+            }
+            
+            .stat-icon {
+                font-size: 16px;
+            }
+            
+            .game-main {
+                padding-top: calc(env(safe-area-inset-top, 0px) + 120px);
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            
+            .trail-grid {
+                padding: 20px;
+            }
+            
+            .trail-header {
+                margin-bottom: 40px;
+                padding: 24px;
+                border-radius: 20px;
+            }
+            
+            .trail-header h3 {
+                font-size: 24px;
+                margin-bottom: 8px;
+            }
+            
+            .trail-header p {
+                font-size: 16px;
+            }
+            
+            .trail-path-container {
+                height: 500px;
+                padding: 40px 20px;
+                margin: 30px 0;
+            }
+            
+            .trail-path {
+                width: 400px;
+                height: 400px;
+                border: 4px dashed rgba(255, 255, 255, 0.4);
+                box-shadow: 
+                    0 0 40px rgba(255, 255, 255, 0.1),
+                    inset 0 0 40px rgba(255, 255, 255, 0.05);
+            }
+            
+            .trail-house {
+                width: 70px;
+                height: 70px;
+                border: 4px solid rgba(255, 255, 255, 0.4);
+                box-shadow: 
+                    0 12px 32px rgba(0, 0, 0, 0.3),
+                    0 0 20px rgba(102, 126, 234, 0.4),
+                    inset 0 2px 10px rgba(255, 255, 255, 0.2);
+            }
+            
+            .house-number {
+                font-size: 14px;
+                margin-bottom: 2px;
+            }
+            
+            .house-category {
+                font-size: 7px;
+                padding: 2px 4px;
+                border-radius: 6px;
+                max-width: 60px;
+            }
+            
+            .house-icon {
+                font-size: 12px;
+            }
+            
+            .house-status {
+                top: -8px;
+                right: -8px;
+                font-size: 16px;
+                width: 24px;
+                height: 24px;
+            }
+            
+            .walking-character {
+                font-size: 36px;
+                filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5));
+            }
+            
+            .control-btn {
+                padding: 12px 24px;
+                border-radius: 12px;
+                font-size: 14px;
+            }
+            
+            .card-container {
+                max-width: 600px;
+                height: 80vh;
+                max-height: 700px;
+            }
+            
+            .card-front, .card-back {
+                padding: 24px;
+                border-radius: 20px;
+            }
+            
+            .card-header {
+                margin-bottom: 20px;
+                gap: 8px;
+            }
+            
+            .card-category, .card-points {
+                padding: 6px 12px;
+                border-radius: 15px;
+                font-size: 12px;
+            }
+            
+            .card-difficulty {
+                padding: 6px 12px;
+                border-radius: 15px;
+                font-size: 12px;
+            }
+            
+            .card-content h3 {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+            
+            .card-content p {
+                font-size: 16px;
+                line-height: 1.6;
+                margin-bottom: 20px;
+            }
+            
+            .flip-btn {
+                padding: 12px 24px;
+                border-radius: 12px;
+                font-size: 16px;
+            }
+            
+            .close-card-btn {
+                top: -10px;
+                right: -10px;
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+            
+            .word-bank {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 12px;
+                margin: 24px 0;
+                padding: 20px;
+                border-radius: 12px;
+                max-height: none;
+            }
+            
+            .word-chip {
+                padding: 12px 16px;
+                border-radius: 25px;
+                font-size: 14px;
+                min-height: 44px;
+            }
+            
+            .answer-trail {
+                min-height: 80px;
+                border-radius: 12px;
+                padding: 20px;
+                margin: 20px 0;
+                gap: 8px;
+                max-height: none;
+            }
+            
+            .answer-word {
+                padding: 8px 16px;
+                border-radius: 20px;
+                font-size: 14px;
+                min-height: 32px;
+            }
+            
+            .card-controls {
+                gap: 12px;
+                margin-top: 16px;
+            }
+            
+            .card-btn {
+                padding: 8px 16px;
+                border-radius: 8px;
+                font-size: 12px;
+                min-height: 40px;
+                min-width: 80px;
+            }
+            
+            .result-content-wrapper {
+                padding: 32px;
+                border-radius: 20px;
+                max-width: 600px;
+            }
+            
+            .result-continue-btn {
+                padding: 12px 24px;
+                border-radius: 12px;
+                margin-top: 20px;
+                font-size: 16px;
+            }
+            
+            .toast {
+                top: 20px;
+                right: 20px;
+                left: auto;
+                padding: 16px 24px;
+                font-size: 16px;
+                text-align: left;
+            }
+        }
+        
+        /* Desktop Styles (1024px+) */
+        @media (min-width: 1024px) {
+            .trail-path-container {
+                height: 600px;
+            }
+            
+            .trail-path {
+                width: 500px;
+                height: 500px;
+                box-shadow: 
+                    0 0 50px rgba(255, 255, 255, 0.1),
+                    inset 0 0 50px rgba(255, 255, 255, 0.05);
+            }
+            
+            .trail-house {
+                width: 90px;
+                height: 90px;
+            }
+            
+            .house-number {
+                font-size: 18px;
+            }
+            
+            .house-category {
+                font-size: 8px;
+                max-width: 70px;
+                border-radius: 8px;
+            }
+            
+            .house-icon {
+                font-size: 16px;
+            }
+            
+            .walking-character {
+                font-size: 48px;
+            }
+            
+            .ball-float {
+                width: 8px;
+                height: 8px;
+            }
+        }
+        
+        /* Landscape orientation adjustments */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .game-main {
+                padding-top: calc(env(safe-area-inset-top, 0px) + 60px);
+            }
+            
+            .floating-header {
+                padding: 8px 16px;
+            }
+            
+            .floating-header h1 {
+                font-size: 12px;
+            }
+            
+            .floating-header h2 {
+                font-size: 10px;
+            }
+            
+            .trail-path-container {
+                height: 300px;
+            }
+            
+            .trail-path {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .trail-house {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .house-number {
+                font-size: 8px;
+            }
+            
+            .house-category {
+                font-size: 4px;
+                max-width: 30px;
+            }
+            
+            .house-icon {
+                font-size: 6px;
+            }
+            
+            .walking-character {
+                font-size: 20px;
+            }
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="min-h-full"><!-- Floating Ball Elements -->
+  <div class="floating-balls">
+   <div class="ball-float ball-blue" style="top: 10%; left: 5%; animation-delay: 0s;"></div>
+   <div class="ball-float ball-green" style="top: 20%; right: 10%; animation-delay: 2s;"></div>
+   <div class="ball-float ball-purple" style="top: 60%; left: 8%; animation-delay: 4s;"></div>
+   <div class="ball-float ball-orange" style="top: 80%; right: 15%; animation-delay: 6s;"></div>
+   <div class="ball-float ball-pink" style="top: 40%; left: 3%; animation-delay: 8s;"></div>
+   <div class="ball-float ball-cyan" style="top: 70%; right: 5%; animation-delay: 10s;"></div>
+   <div class="ball-float ball-yellow" style="top: 30%; right: 20%; animation-delay: 12s;"></div>
+   <div class="ball-float ball-red" style="top: 90%; left: 12%; animation-delay: 14s;"></div>
+   <div class="ball-float ball-indigo" style="top: 15%; left: 25%; animation-delay: 16s;"></div>
+   <div class="ball-float ball-teal" style="top: 85%; right: 25%; animation-delay: 18s;"></div>
+   <div class="ball-float ball-lime" style="top: 45%; right: 8%; animation-delay: 20s;"></div>
+   <div class="ball-float ball-violet" style="top: 65%; left: 15%; animation-delay: 22s;"></div>
+  </div>
+  <div id="app" class="min-h-full" style="background: transparent; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; position: relative; z-index: 10;"><!-- Floating Header -->
+   <header class="floating-header">
+    <div class="header-content">
+     <div class="header-title-section"><span class="header-icon">🔬</span>
+      <div>
+       <h1 id="main-title">Revisão de Anatomia Humana</h1>
+       <h2 id="subtitle">Sistema Nervoso</h2>
+      </div>
+     </div><!-- Compact Stats -->
+     <div class="compact-stats">
+      <div class="stat-item"><span class="stat-icon">🔥</span> <span id="current-streak">0</span>
+      </div>
+      <div class="stat-item"><span class="stat-icon">⭐</span> <span id="max-streak">0</span>
+      </div>
+      <div class="stat-item"><span class="stat-icon">🚶‍♂️</span> <span><span id="card-progress">1</span>/<span id="total-cards">35</span></span>
+      </div>
+      <div class="stat-item thought-bubble"><span>🧠</span>
+       <div id="thought-cloud">
+        💭
+       </div>
+      </div>
+     </div>
+    </div>
+   </header><!-- Main Game Area -->
+   <main class="game-main"><!-- Walking Trail with Hidden Cards -->
+    <div class="trail-grid">
+     <div class="trail-header">
+      <h3>🗺️ Jornada pelo Sistema Nervoso</h3>
+      <p>Todas as 35 cartas estão espalhadas pelo tabuleiro! Explore livremente e clique em qualquer carta para estudar!</p>
+     </div><!-- Trail Path Container -->
+     <div class="trail-container">
+      <div class="trail-path-container">
+       <div class="trail-path" id="trail-path"><!-- Walking Character -->
+        <div class="walking-character" id="walking-character">
+         🚶‍♂️
+        </div><!-- Houses will be generated here -->
+       </div>
+      </div>
+     </div><!-- Game Controls -->
+     <div class="game-controls"><button onclick="shuffleCards()" class="control-btn shuffle-btn"> 🔀 Embaralhar </button> <button onclick="resetGame()" class="control-btn reset-btn"> 🔄 Reiniciar </button>
+     </div>
+    </div><!-- Hidden Card Modal -->
+    <div id="card-modal" class="card-modal">
+     <div class="card-modal-backdrop" onclick="closeCardModal()"></div>
+     <div class="card-container">
+      <div class="card-front" id="card-front">
+       <div class="card-header"><span id="card-category" class="card-category"></span> <span id="card-difficulty" class="card-difficulty"></span> <span id="card-points" class="card-points"></span>
+       </div>
+       <div class="card-content">
+        <h3 id="card-title">🧠 Caso Clínico</h3>
+        <p id="card-question"></p>
+       </div><button onclick="flipCard()" class="flip-btn"> 🔄 Virar Carta </button>
+      </div>
+      <div class="card-back" id="card-back">
+       <div class="card-game-area">
+        <h3>🎯 Monte sua resposta:</h3><!-- Answer Trail -->
+        <div id="answer-trail" class="answer-trail">
+         <div class="trail-placeholder">
+          Clique nas frases para formar sua resposta...
+         </div>
+        </div><!-- Word Bank -->
+        <div id="word-bank" class="word-bank"><!-- Words will be populated here -->
+        </div><!-- Card Controls -->
+        <div class="card-controls"><button onclick="clearTrail()" class="card-btn clear-btn"> 🗑️ Limpar </button> <button onclick="checkTrailAnswer()" class="card-btn check-btn"> ✅ Verificar </button> <button onclick="showHint()" class="card-btn hint-btn"> 💡 Dica </button>
+        </div>
+       </div><button onclick="flipCard()" class="flip-btn"> 🔄 Ver Pergunta </button>
+      </div><button onclick="closeCardModal()" class="close-card-btn"> ✕ </button>
+     </div>
+    </div><!-- Result Modal -->
+    <div id="result-modal" class="result-modal">
+     <div class="result-modal-backdrop" onclick="closeResultModal()"></div>
+     <div class="result-content-wrapper">
+      <div id="result-content"></div><button onclick="closeResultModal()" class="result-continue-btn"> Continuar Jornada </button>
+     </div>
+    </div>
+   </main>
+  </div>
+  <script>
+        const defaultConfig = {
+            main_title: "Revisão de Anatomia Humana",
+            subtitle: "Sistema Nervoso",
+            professor_name: "",
+            institution: "",
+            background_color: "#f0f9ff",
+            card_color: "#ffffff",
+            primary_color: "#0ea5e9",
+            text_color: "#1e293b",
+            accent_color: "#10b981",
+            font_family: "Inter",
+            font_size: 16
+        };
+
+        const cases = [
+            {
+                id: "case_1",
+                category: "Função",
+                question: "Um biólogo estuda um novo organismo e observa que seu sistema de controle precisa constantemente receber dados ambientais, processar essas informações e coordenar a resposta motora para a sobrevivência. Com base nestas três etapas (recepção, processamento, resposta), qual a principal analogia que melhor descreve o Sistema Nervoso?",
+                correctAnswer: "O Sistema Nervoso funciona como um computador central: recebe inputs (sensores), processa dados (integração) e gera outputs (respostas motoras), coordenando todas as funções do organismo.",
+                wordBank: ["Sistema Nervoso funciona", "como computador central", "recebe inputs sensoriais", "processa informações", "gera outputs motores"],
+                correctSequence: ["Sistema Nervoso funciona", "como computador central", "recebe inputs sensoriais", "processa informações", "gera outputs motores"],
+                difficulty: "Fácil",
+                points: 10
+            },
+            {
+                id: "case_2",
+                category: "Homeostase",
+                question: "Durante uma febre, o corpo aciona mecanismos para baixar a temperatura. Quais são as três funções básicas que o Sistema Nervoso executa para manter a homeostase?",
+                correctAnswer: "1) Função Sensorial: detectar a temperatura elevada através de termorreceptores; 2) Função de Integração: processar essa informação no hipotálamo; 3) Função Motora: ativar glândulas sudoríparas e vasodilatação para resfriar o corpo.",
+                wordBank: ["Função Sensorial detecta", "temperatura elevada", "Função de Integração", "processa no hipotálamo", "Função Motora ativa"],
+                correctSequence: ["Função Sensorial detecta", "temperatura elevada", "Função de Integração", "processa no hipotálamo", "Função Motora ativa"],
+                difficulty: "Médio",
+                points: 15
+            },
+            {
+                id: "case_3",
+                category: "Divisão Anatômica",
+                question: "Um pesquisador identifica agrupamentos de corpos celulares dentro da Medula Espinhal (SNC) e fora dela (SNP). Como classificar esses aglomerados anatomicamente?",
+                correctAnswer: "No SNC, o agrupamento de corpos celulares é chamado de NÚCLEO. No SNP, o agrupamento é chamado de GÂNGLIO. Esta distinção anatômica é fundamental para a classificação estrutural do sistema nervoso.",
+                wordBank: ["No SNC agrupamento", "é chamado NÚCLEO", "No SNP agrupamento", "é chamado GÂNGLIO", "distinção anatômica fundamental"],
+                correctSequence: ["No SNC agrupamento", "é chamado NÚCLEO", "No SNP agrupamento", "é chamado GÂNGLIO", "distinção anatômica fundamental"],
+                difficulty: "Médio",
+                points: 15
+            },
+            {
+                id: "case_4",
+                category: "Histologia",
+                question: "Uma amostra de tecido nervoso sob o microscópio mostra células altamente ramificadas capazes de gerar impulsos e, ao redor, células que fornecem suporte estrutural e formam barreiras protetoras. Qual célula é a unidade funcional responsável pela comunicação rápida (o neurônio) e qual é o grupo celular responsável pelo seu suporte, nutrição e proteção (a glia)?",
+                correctAnswer: "NEURÔNIOS: células excitáveis que geram e transmitem impulsos nervosos através de seus prolongamentos (dendritos e axônios). CÉLULAS DA GLIA (ou neuróglia): células de suporte que nutrem, protegem, isolam e mantêm a homeostase do tecido nervoso.",
+                wordBank: ["NEURÔNIOS são células", "excitáveis que geram", "e transmitem impulsos", "CÉLULAS DA GLIA", "nutrem e protegem"],
+                correctSequence: ["NEURÔNIOS são células", "excitáveis que geram", "e transmitem impulsos", "CÉLULAS DA GLIA", "nutrem e protegem"],
+                difficulty: "Fácil",
+                points: 10
+            },
+            {
+                id: "case_5",
+                category: "Demanda Metabólica",
+                question: "Um paciente sofre uma hipoglicemia severa (baixo nível de glicose no sangue). Os primeiros sintomas são confusão mental e perda de consciência. Considerando que o cérebro consome 20% do oxigênio e glicose do corpo, o que essa alta demanda metabólica sugere sobre a vulnerabilidade do SNC à interrupção no fornecimento de nutrientes?",
+                correctAnswer: "O SNC é extremamente vulnerável à falta de glicose e oxigênio devido à sua alta demanda metabólica. Não possui reservas energéticas significativas, dependendo do suprimento sanguíneo contínuo. A hipoglicemia afeta rapidamente a função cerebral, causando confusão e perda de consciência, pois os neurônios não conseguem manter suas funções vitais sem glicose adequada.",
+                wordBank: ["SNC extremamente vulnerável", "à falta de glicose", "alta demanda metabólica", "não possui reservas", "hipoglicemia afeta rapidamente"],
+                correctSequence: ["SNC extremamente vulnerável", "à falta de glicose", "alta demanda metabólica", "não possui reservas", "hipoglicemia afeta rapidamente"],
+                difficulty: "Difícil",
+                points: 20
+            },
+            {
+                id: "case_6",
+                category: "Anatomia",
+                question: "Um sinal elétrico chega ao corpo de um neurônio motor no Corno Anterior da medula e precisa ser enviado rapidamente ao músculo. Descreva a função das estruturas Dendritos e Axônio na propagação desse impulso nervoso, em termos de direção do sinal (aferente ou eferente) em relação ao corpo celular.",
+                correctAnswer: "DENDRITOS: recebem sinais AFERENTES (chegam ao corpo celular) de outros neurônios através de sinapses. AXÔNIO: conduz sinais EFERENTES (saem do corpo celular) levando o impulso nervoso do neurônio motor até a placa motora no músculo. O fluxo é: dendritos → corpo celular → axônio → terminal sináptico.",
+                wordBank: ["DENDRITOS recebem sinais", "AFERENTES chegam ao", "AXÔNIO conduz sinais", "EFERENTES saem do", "impulso até músculo"],
+                correctSequence: ["DENDRITOS recebem sinais", "AFERENTES chegam ao", "AXÔNIO conduz sinais", "EFERENTES saem do", "impulso até músculo"],
+                difficulty: "Médio",
+                points: 15
+            },
+            {
+                id: "case_7",
+                category: "Tipologia",
+                question: "Um paciente toca em uma superfície quente. O impulso de dor é gerado na periferia e levado ao Corno Posterior da medula. Esse sinal é conduzido por qual tipo de neurônio (motor, sensitivo ou interneurônio)? E qual sua classificação morfológica mais comum (ex: pseudounipolar), evidenciada pelo corpo celular no gânglio sensitivo?",
+                correctAnswer: "NEURÔNIO SENSITIVO (ou sensorial): conduz informações da periferia para o SNC. Classificação morfológica: PSEUDOUNIPOLAR - possui um prolongamento único que se bifurca em dois ramos (um periférico que vai à pele e outro central que vai à medula). O corpo celular fica no gânglio da raiz dorsal, fora do SNC.",
+                wordBank: ["NEURÔNIO SENSITIVO conduz", "informações da periferia", "para o SNC", "PSEUDOUNIPOLAR possui", "prolongamento único bifurcado"],
+                correctSequence: ["NEURÔNIO SENSITIVO conduz", "informações da periferia", "para o SNC", "PSEUDOUNIPOLAR possui", "prolongamento único bifurcado"],
+                difficulty: "Difícil",
+                points: 20
+            },
+            {
+                id: "case_8",
+                category: "Mielina",
+                question: "Um impulso nervoso percorre um nervo periférico a uma alta velocidade. Essa velocidade é creditada à presença da bainha de mielina. Qual tipo de célula glial é responsável por formar a bainha de mielina no SNP (Célula de Schwann ou Oligodendrócito) e qual o significado funcional de um axônio ser mielinizado?",
+                correctAnswer: "CÉLULA DE SCHWANN: responsável pela mielinização no SNP (Sistema Nervoso Periférico). SIGNIFICADO FUNCIONAL: a bainha de mielina atua como isolante elétrico, permitindo CONDUÇÃO SALTATÓRIA - o impulso 'pula' de nódulo para nódulo, aumentando drasticamente a velocidade de condução (até 120 m/s vs 2 m/s em axônios não-mielinizados).",
+                wordBank: ["CÉLULA DE SCHWANN", "responsável pela mielinização", "no SNP periférico", "permite CONDUÇÃO SALTATÓRIA", "aumenta velocidade drasticamente"],
+                correctSequence: ["CÉLULA DE SCHWANN", "responsável pela mielinização", "no SNP periférico", "permite CONDUÇÃO SALTATÓRIA", "aumenta velocidade drasticamente"],
+                difficulty: "Médio",
+                points: 15
+            },
+            {
+                id: "case_9",
+                category: "Condução",
+                question: "A doença de Guillain-Barré causa a desmielinização dos nervos periféricos. Na condução normal, qual é o nome do mecanismo pelo qual o potencial de ação 'salta' de um Nódulo da Bainha de Mielina para o próximo, e como a perda dessa mielina afeta a velocidade do sinal?",
+                correctAnswer: "CONDUÇÃO SALTATÓRIA: mecanismo onde o potencial de ação 'salta' entre os nódulos de Ranvier (espaços sem mielina). EFEITO DA DESMIELINIZAÇÃO: perda da condução saltatória → redução drástica da velocidade → condução contínua lenta → sintomas como fraqueza muscular, parestesias e paralisia progressiva na síndrome de Guillain-Barré.",
+                wordBank: ["CONDUÇÃO SALTATÓRIA mecanismo", "potencial salta entre", "nódulos de Ranvier", "desmielinização reduz velocidade", "causa fraqueza muscular"],
+                correctSequence: ["CONDUÇÃO SALTATÓRIA mecanismo", "potencial salta entre", "nódulos de Ranvier", "desmielinização reduz velocidade", "causa fraqueza muscular"],
+                difficulty: "Difícil",
+                points: 20
+            },
+            {
+                id: "case_10",
+                category: "Sinapse",
+                question: "Um neurônio pré-sináptico libera Acetilcolina. Esta substância viaja pela Fenda Sináptica e se liga aos receptores pós-sinápticos. Qual o nome dessa substância química liberada, e qual a sua ação fundamental no neurônio pós-sináptico para desencadear ou inibir a propagação do sinal?",
+                correctAnswer: "NEUROTRANSMISSOR: substância química (neste caso, Acetilcolina) liberada pelo neurônio pré-sináptico. AÇÃO: liga-se a receptores específicos na membrana pós-sináptica → abre canais iônicos → permite entrada/saída de íons → gera potencial pós-sináptico excitatório (PPSE) ou inibitório (PPSI) → pode desencadear ou inibir novo potencial de ação.",
+                wordBank: ["NEUROTRANSMISSOR substância química", "liberada pelo neurônio", "liga-se a receptores", "abre canais iônicos", "gera potencial pós-sináptico"],
+                correctSequence: ["NEUROTRANSMISSOR substância química", "liberada pelo neurônio", "liga-se a receptores", "abre canais iônicos", "gera potencial pós-sináptico"],
+                difficulty: "Médio",
+                points: 15
+            },
+            {
+                id: "case_11",
+                category: "Meninges/LCS",
+                question: "Em um acidente, suspeita-se de hemorragia cerebral. As membranas de proteção do SNC estão sob risco. Nomeie as três camadas meníngeas, de fora para dentro, e aponte em qual espaço (ex: subaracnóideo) circula o Líquido Cerebrospinal (LCS) que protege o encéfalo?",
+                correctAnswer: "TRÊS MENINGES (de fora para dentro): 1) DURA-MÁTER (espessa, resistente); 2) ARACNOIDE-MÁTER (média, aspecto de teia de aranha); 3) PIA-MÁTER (delicada, aderida ao tecido nervoso). O LÍQUIDO CEREBROSPINAL (LCS) circula no ESPAÇO SUBARACNÓIDEO (entre aracnoide e pia-máter), proporcionando proteção mecânica e suporte metabólico ao SNC.",
+                wordBank: ["DURA-MÁTER camada externa", "ARACNOIDE-MÁTER camada média", "PIA-MÁTER camada interna", "LCS circula espaço", "SUBARACNÓIDEO entre camadas"],
+                correctSequence: ["DURA-MÁTER camada externa", "ARACNOIDE-MÁTER camada média", "PIA-MÁTER camada interna", "LCS circula espaço", "SUBARACNÓIDEO entre camadas"],
+                difficulty: "Médio",
+                points: 15
+            },
+            {
+                id: "case_12",
+                category: "Substância",
+                question: "Um neurocirurgião observa um corte no Córtex Cerebral e nota a diferença de cor. Se a Substância Cinzenta (Córtex) é composta principalmente por corpos celulares, como podemos descrever a função dela (processamento) em oposição à função da Substância Branca (condução), formada por axônios mielinizados?",
+                correctAnswer: "SUBSTÂNCIA CINZENTA: composta por corpos celulares neuronais, dendritos e sinapses → função de PROCESSAMENTO e INTEGRAÇÃO de informações (análise, tomada de decisão, geração de respostas). SUBSTÂNCIA BRANCA: formada por axônios mielinizados → função de CONDUÇÃO e TRANSMISSÃO rápida de impulsos entre diferentes regiões do SNC. A cinzenta 'pensa', a branca 'conecta'.",
+                wordBank: ["SUBSTÂNCIA CINZENTA composta", "por corpos celulares", "função de PROCESSAMENTO", "SUBSTÂNCIA BRANCA formada", "por axônios mielinizados"],
+                correctSequence: ["SUBSTÂNCIA CINZENTA composta", "por corpos celulares", "função de PROCESSAMENTO", "SUBSTÂNCIA BRANCA formada", "por axônios mielinizados"],
+                difficulty: "Médio",
+                points: 15
+            },
+            {
+                id: "case_13",
+                category: "Telencéfalo",
+                question: "Um paciente com AVC perde a capacidade de coordenar movimentos no lado esquerdo do corpo e apresenta dificuldade de fala (funções do Lobo Frontal). Qual estrutura de substância branca (Corpo Caloso) é a principal ponte de comunicação entre os hemisférios, e qual giro do Lobo Límbico é crucial para as emoções?",
+                correctAnswer: "CORPO CALOSO: maior comissura cerebral, formada por fibras de substância branca que conectam os dois hemisférios cerebrais, permitindo comunicação e coordenação entre eles. GIRO DO CÍNGULO: parte do sistema límbico, crucial para processamento emocional, memória e comportamento. O AVC afetou o hemisfério direito (controla lado esquerdo do corpo) e áreas de linguagem.",
+                wordBank: ["CORPO CALOSO maior", "comissura cerebral conecta", "dois hemisférios cerebrais", "GIRO DO CÍNGULO", "crucial para emoções"],
+                correctSequence: ["CORPO CALOSO maior", "comissura cerebral conecta", "dois hemisférios cerebrais", "GIRO DO CÍNGULO", "crucial para emoções"],
+                difficulty: "Difícil",
+                points: 20
+            },
+            {
+                id: "case_14",
+                category: "Aprendizado",
+                question: "Após um longo período de reabilitação, um paciente que sofreu um trauma cerebral recupera algumas funções motoras e cognitivas. Qual é o conceito biológico que descreve a capacidade do cérebro de reorganizar suas vias neurais e sinapses, sendo fundamental para esse processo de recuperação e aprendizado?",
+                correctAnswer: "NEUROPLASTICIDADE (ou Plasticidade Neural): capacidade do sistema nervoso de modificar suas conexões sinápticas, formar novas vias neurais e reorganizar circuitos em resposta a experiências, aprendizado ou lesões. Permite que áreas saudáveis do cérebro assumam funções de áreas lesionadas, sendo fundamental para reabilitação e recuperação funcional após traumas cerebrais.",
+                wordBank: ["NEUROPLASTICIDADE capacidade do", "sistema nervoso modificar", "conexões sinápticas formar", "novas vias neurais", "fundamental para reabilitação"],
+                correctSequence: ["NEUROPLASTICIDADE capacidade do", "sistema nervoso modificar", "conexões sinápticas formar", "novas vias neurais", "fundamental para reabilitação"],
+                difficulty: "Médio",
+                points: 15
+            },
+            {
+                id: "case_15",
+                category: "Medula Terminação",
+                question: "Um radiologista analisa a coluna vertebral de um adulto para um procedimento. A medula não se estende até o final da coluna. Qual estrutura pontiaguda (Cone Medular) marca o final da Medula Espinhal em adultos (geralmente L1/L2), e qual feixe de raízes nervosas segue a partir deste ponto?",
+                correctAnswer: "CONE MEDULAR (Conus Medullaris): terminação pontiaguda da medula espinhal, localizada aproximadamente ao nível de L1-L2 em adultos. CAUDA EQUINA: conjunto de raízes nervosas (L2-S5 e coccígeas) que se estendem do cone medular até seus respectivos forames intervertebrais, com aparência semelhante à cauda de cavalo, daí o nome.",
+                wordBank: ["CONE MEDULAR terminação", "pontiaguda da medula", "localizada nível L1-L2", "CAUDA EQUINA conjunto", "de raízes nervosas"],
+                correctSequence: ["CONE MEDULAR terminação", "pontiaguda da medula", "localizada nível L1-L2", "CAUDA EQUINA conjunto", "de raízes nervosas"],
+                difficulty: "Médio",
+                points: 15
+            },
+            {
+                id: "case_16",
+                category: "Tronco Encefálico",
+                question: "Um paciente sofre um traumatismo craniano que afeta a base do encéfalo. Se as funções básicas (respiração, frequência cardíaca) forem afetadas, suspeita-se de lesão no Tronco Encefálico. Quais são as três partes que compõem o Tronco Encefálico e qual a função biológica de comunicação entre o cérebro e a medula que ele exerce?",
+                correctAnswer: "TRÊS PARTES DO TRONCO ENCEFÁLICO: 1) MESENCÉFALO (superior); 2) PONTE (média); 3) BULBO/MEDULA OBLONGA (inferior). FUNÇÕES: controla funções vitais autônomas (respiração, batimentos cardíacos, pressão arterial), serve como via de passagem para tratos ascendentes e descendentes entre cérebro e medula espinhal, e contém núcleos de nervos cranianos essenciais.",
+                wordBank: ["MESENCÉFALO parte superior", "PONTE parte média", "BULBO parte inferior", "controla funções vitais", "via passagem cérebro-medula"],
+                correctSequence: ["MESENCÉFALO parte superior", "PONTE parte média", "BULBO parte inferior", "controla funções vitais", "via passagem cérebro-medula"],
+                difficulty: "Difícil",
+                points: 20
+            },
+            {
+                id: "case_17",
+                category: "Punção Lombar",
+                question: "Um médico precisa colher Líquido Cerebrospinal (LCS) para diagnóstico. Considerando o nível de término da Medula Espinhal, por que a região da Cisterna Lombar é o local ideal e seguro para a Punção Lombar, minimizando o risco de lesão medular?",
+                correctAnswer: "A Medula Espinhal termina em L1/L2 (Cone Medular). A Cisterna Lombar, localizada abaixo desse nível, contém apenas LCS e a Cauda Equina, e não a medula espinhal, tornando a punção segura.",
+                wordBank: ["Medula Espinhal termina", "em L1/L2 Cone", "Cisterna Lombar localizada", "abaixo desse nível", "contém apenas LCS"],
+                correctSequence: ["Medula Espinhal termina", "em L1/L2 Cone", "Cisterna Lombar localizada", "abaixo desse nível", "contém apenas LCS"],
+                difficulty: "Médio",
+                points: 15
+            },
+            {
+                id: "case_18",
+                category: "Organização SNP",
+                question: "Um biólogo estuda a inervação de um membro. Ele encontra o 'caminho' (feixes de axônios) e um 'posto de comando' (aglomerado de corpos celulares) fora do SNC. Como são denominadas as estruturas que carregam feixes de fibras nervosas e os aglomerados de corpos celulares fora do SNC (Gânglios)?",
+                correctAnswer: "Feixes de fibras nervosas são os Nervos. Aglomerados de corpos celulares fora do SNC são os Gânglios.",
+                wordBank: ["Feixes de fibras", "nervosas são Nervos", "Aglomerados de corpos", "celulares são Gânglios", "fora do SNC"],
+                correctSequence: ["Feixes de fibras", "nervosas são Nervos", "Aglomerados de corpos", "celulares são Gânglios", "fora do SNC"],
+                difficulty: "Fácil",
+                points: 10
+            },
+            {
+                id: "case_19",
+                category: "Revestimento Nervo",
+                question: "Um nervo espinhal é surpreendentemente resistente à tensão e compressão. Qual é a camada mais externa e espessa de tecido conjuntivo (epineuro) que circunda e protege todo o nervo, garantindo sua integridade biológica?",
+                correctAnswer: "Epineuro. É a camada mais externa de tecido conjuntivo que envolve todo o nervo, fornecendo proteção mecânica.",
+                wordBank: ["Epineuro camada mais", "externa de tecido", "conjuntivo envolve todo", "nervo fornecendo proteção", "mecânica contra tensão"],
+                correctSequence: ["Epineuro camada mais", "externa de tecido", "conjuntivo envolve todo", "nervo fornecendo proteção", "mecânica contra tensão"],
+                difficulty: "Fácil",
+                points: 10
+            },
+            {
+                id: "case_20",
+                category: "Substância Medular",
+                question: "Em um corte transversal da medula espinhal, a distribuição das substâncias é oposta à do cérebro. Qual a diferença na localização da substância branca e cinzenta, e qual a função biológica de cada uma nessa disposição (condução vs. processamento)?",
+                correctAnswer: "A Substância Cinzenta está no centro (em formato de 'H') (processamento/sinapses). A Substância Branca está na periferia (condução de tratos).",
+                wordBank: ["Substância Cinzenta está", "no centro formato", "H processamento sinapses", "Substância Branca está", "na periferia condução"],
+                correctSequence: ["Substância Cinzenta está", "no centro formato", "H processamento sinapses", "Substância Branca está", "na periferia condução"],
+                difficulty: "Médio",
+                points: 15
+            },
+            {
+                id: "case_21",
+                category: "Corno Anterior",
+                question: "Um neurologista diagnostica fraqueza muscular devido à degeneração de corpos celulares neuronais no Corno Cinzento Anterior. Qual é a função motora que essa região da medula realiza, e que tipo de neurônios (sensitivos, motores, ou interneurônios) estão sendo afetados?",
+                correctAnswer: "O Corno Anterior abriga corpos celulares de Neurônios Motores (Eferentes), responsáveis pelo controle dos músculos esqueléticos (voluntários).",
+                wordBank: ["Corno Anterior abriga", "corpos celulares de", "Neurônios Motores Eferentes", "responsáveis pelo controle", "músculos esqueléticos voluntários"],
+                correctSequence: ["Corno Anterior abriga", "corpos celulares de", "Neurônios Motores Eferentes", "responsáveis pelo controle", "músculos esqueléticos voluntários"],
+                difficulty: "Médio",
+                points: 15
+            },
+            {
+                id: "case_22",
+                category: "Vias Sensitivas",
+                question: "A sensação de dor (informação sensitiva) entra na medula pela Raiz Posterior, chegando ao Corno Cinzento Posterior. Qual é a função desse corno e qual a estrutura associada à raiz posterior que contém o corpo celular do neurônio sensitivo?",
+                correctAnswer: "O Corno Posterior recebe informação sensitiva (Aferente). O corpo celular do neurônio sensitivo primário está no Gânglio Sensitivo do Nervo Espinhal, associado à Raiz Posterior.",
+                wordBank: ["Corno Posterior recebe", "informação sensitiva Aferente", "corpo celular neurônio", "está no Gânglio", "Sensitivo Raiz Posterior"],
+                correctSequence: ["Corno Posterior recebe", "informação sensitiva Aferente", "corpo celular neurônio", "está no Gânglio", "Sensitivo Raiz Posterior"],
+                difficulty: "Médio",
+                points: 15
+            },
+            {
+                id: "case_23",
+                category: "Meninges Espinhais",
+                question: "Durante uma punção para coleta de líquido, o médico precisa atravessar as membranas protetoras da medula. Nomeie as três meninges espinhais (de fora para dentro) e descreva brevemente a função do espaço preenchido por LCS em termos de proteção mecânica.",
+                correctAnswer: "Dura-máter, Aracnoide-máter e Pia-máter. O LCS (Líquido Cerebrospinal) no espaço subaracnóideo fornece amortecimento e flutuabilidade (proteção contra choque).",
+                wordBank: ["Dura-máter Aracnoide-máter", "e Pia-máter", "LCS Líquido Cerebrospinal", "espaço subaracnóideo fornece", "amortecimento e flutuabilidade"],
+                correctSequence: ["Dura-máter Aracnoide-máter", "e Pia-máter", "LCS Líquido Cerebrospinal", "espaço subaracnóideo fornece", "amortecimento e flutuabilidade"],
+                difficulty: "Médio",
+                points: 15
+            },
+            {
+                id: "case_24",
+                category: "Corno Lateral",
+                question: "O Corno Cinzento Lateral é visível apenas em algumas regiões da medula (T1 a L2). Qual sistema funcional do corpo (Autônomo ou Somático) ele abriga, e qual é a sua principal função em termos de regulação visceral?",
+                correctAnswer: "Abriga corpos celulares de neurônios pré-ganglionares do Sistema Nervoso Autônomo Simpático. Sua função é controlar as funções viscerais (involuntárias) como o batimento cardíaco, vasos sanguíneos e glândulas.",
+                wordBank: ["Abriga corpos celulares", "neurônios pré-ganglionares", "Sistema Nervoso Autônomo", "Simpático controlar funções", "viscerais involuntárias cardíaco"],
+                correctSequence: ["Abriga corpos celulares", "neurônios pré-ganglionares", "Sistema Nervoso Autônomo", "Simpático controlar funções", "viscerais involuntárias cardíaco"],
+                difficulty: "Difícil",
+                points: 20
+            },
+            {
+                id: "case_25",
+                category: "Curiosidade Dor",
+                question: "Durante uma cirurgia cerebral, o paciente pode estar acordado, sem sentir dor no tecido cerebral em si. O que falta no tecido cerebral (nociceptores) que está presente nas meninges e na pele que explica por que o cérebro, centro de processamento de dor, não sente dor?",
+                correctAnswer: "O tecido cerebral (parênquima) não possui Nociceptores (receptores de dor). A dor é sentida pelas meninges e vasos sanguíneos adjacentes.",
+                wordBank: ["tecido cerebral parênquima", "não possui Nociceptores", "receptores de dor", "dor sentida pelas", "meninges e vasos"],
+                correctSequence: ["tecido cerebral parênquima", "não possui Nociceptores", "receptores de dor", "dor sentida pelas", "meninges e vasos"],
+                difficulty: "Médio",
+                points: 15
+            },
+            {
+                id: "case_26",
+                category: "Esclerose Múltipla",
+                question: "A Esclerose Múltipla é uma doença autoimune onde a bainha de mielina no SNC é destruída. Biologicamente, como a destruição dessa camada lipoproteica afeta a velocidade e a eficiência da transmissão do impulso nervoso, e quais são as consequências clínicas para o paciente?",
+                correctAnswer: "A destruição impede a Condução Saltatória, diminuindo drasticamente a velocidade de transmissão ou bloqueando-a, resultando em sintomas motores (fraqueza) e sensitivos.",
+                wordBank: ["destruição impede Condução", "Saltatória diminuindo velocidade", "transmissão ou bloqueando", "resultando sintomas motores", "fraqueza e sensitivos"],
+                correctSequence: ["destruição impede Condução", "Saltatória diminuindo velocidade", "transmissão ou bloqueando", "resultando sintomas motores", "fraqueza e sensitivos"],
+                difficulty: "Difícil",
+                points: 20
+            },
+            {
+                id: "case_27",
+                category: "Diencéfalo/Límbico",
+                question: "Um paciente com amnésia grave é incapaz de formar novas memórias duradouras, indicando lesão no sistema límbico (Hipocampo, ligado ao Giro Parahipocampal). Qual estrutura do Diencéfalo (Hipotálamo) regula funções viscerais (fome, sede, temperatura), e qual a importância biológica do Hipocampo para a consolidação de novas memórias?",
+                correctAnswer: "Hipotálamo (regulação visceral). Hipocampo (ligado ao Giro Parahipocampal) é fundamental para a conversão de memórias de curto prazo em longo prazo.",
+                wordBank: ["Hipotálamo regulação visceral", "Hipocampo ligado Giro", "Parahipocampal fundamental para", "conversão memórias curto", "prazo em longo"],
+                correctSequence: ["Hipotálamo regulação visceral", "Hipocampo ligado Giro", "Parahipocampal fundamental para", "conversão memórias curto", "prazo em longo"],
+                difficulty: "Difícil",
+                points: 20
+            },
+            {
+                id: "case_28",
+                category: "Raízes Nervosas",
+                question: "Uma lesão por compressão na coluna afeta a capacidade motora e sensitiva. Quais são as duas Raízes Nervosas (anterior e posterior) que se unem para formar o Nervo Espinhal, e qual delas contém o Gânglio Sensitivo (aglomerado de corpos celulares sensitivos)?",
+                correctAnswer: "Raiz Anterior (Motora/Eferente) e Raiz Posterior (Sensitiva/Aferente). O Gânglio Sensitivo está na Raiz Posterior.",
+                wordBank: ["Raiz Anterior Motora", "Eferente Raiz Posterior", "Sensitiva Aferente Gânglio", "Sensitivo está na", "Raiz Posterior"],
+                correctSequence: ["Raiz Anterior Motora", "Eferente Raiz Posterior", "Sensitiva Aferente Gânglio", "Sensitivo está na", "Raiz Posterior"],
+                difficulty: "Médio",
+                points: 15
+            },
+            {
+                id: "case_29",
+                category: "Tálamo/Hipófise",
+                question: "Um neurocientista descreve o Tálamo como uma estação de revezamento. Qual estrutura do Diencéfalo atua como 'portão de entrada' para a maioria das informações sensoriais que chegam ao Córtex Cerebral, e qual glândula endócrina fundamental se liga anatomicamente ao Hipotálamo?",
+                correctAnswer: "Tálamo (revezamento sensorial). Hipófise (Pituitária) (glândula endócrina).",
+                wordBank: ["Tálamo revezamento sensorial", "portão entrada informações", "sensoriais Córtex Cerebral", "Hipófise Pituitária glândula", "endócrina liga Hipotálamo"],
+                correctSequence: ["Tálamo revezamento sensorial", "portão entrada informações", "sensoriais Córtex Cerebral", "Hipófise Pituitária glândula", "endócrina liga Hipotálamo"],
+                difficulty: "Médio",
+                points: 15
+            },
+            {
+                id: "case_30",
+                category: "Cerebelo",
+                question: "Ao fazer um corte sagital no Cerebelo, a substância branca apresenta um padrão arborizado. Qual o nome dado a essa organização, e qual sua importância em termos de condução de sinais entre o córtex cerebelar (cinzenta) e os núcleos profundos?",
+                correctAnswer: "Árvore da Vida (Arbor Vitae). É a via de condução de e para o córtex cerebelar, essencial para a coordenação motora.",
+                wordBank: ["Árvore da Vida", "Arbor Vitae via", "condução córtex cerebelar", "núcleos profundos essencial", "coordenação motora"],
+                correctSequence: ["Árvore da Vida", "Arbor Vitae via", "condução córtex cerebelar", "núcleos profundos essencial", "coordenação motora"],
+                difficulty: "Médio",
+                points: 15
+            },
+            {
+                id: "case_31",
+                category: "Divisão Funcional",
+                question: "Um biólogo estuda o sistema nervoso e percebe que ele pode ser dividido em termos de controle. Qual é a principal divisão funcional que separa as ações conscientes (músculo esquelético) das ações viscerais inconscientes (coração, glândulas)?",
+                correctAnswer: "O Sistema Nervoso Somático (SNS) controla ações conscientes, e o Sistema Nervoso Autônomo (SNA) controla as ações viscerais inconscientes.",
+                wordBank: ["Sistema Nervoso Somático", "SNS controla ações", "conscientes músculo esquelético", "Sistema Nervoso Autônomo", "SNA controla viscerais"],
+                correctSequence: ["Sistema Nervoso Somático", "SNS controla ações", "conscientes músculo esquelético", "Sistema Nervoso Autônomo", "SNA controla viscerais"],
+                difficulty: "Médio",
+                points: 15
+            },
+            {
+                id: "case_32",
+                category: "Partes do Encéfalo",
+                question: "Um neurologista realiza uma ressonância magnética e precisa descrever as principais estruturas do Encéfalo. Nomeie as três principais partes do Encéfalo, sendo o Telencéfalo e o Diencéfalo as estruturas mais superiores.",
+                correctAnswer: "As três partes principais são o Cérebro (que inclui Telencéfalo e Diencéfalo), o Cerebelo e o Tronco Encefálico.",
+                wordBank: ["três partes principais", "Cérebro inclui Telencéfalo", "e Diencéfalo", "Cerebelo e Tronco", "Encefálico estruturas superiores"],
+                correctSequence: ["três partes principais", "Cérebro inclui Telencéfalo", "e Diencéfalo", "Cerebelo e Tronco", "Encefálico estruturas superiores"],
+                difficulty: "Médio",
+                points: 15
+            },
+            {
+                id: "case_33",
+                category: "Raciocínio e Movimento",
+                question: "Um paciente sofre uma lesão traumática na porção anterior do cérebro, resultando em dificuldade de planejamento de tarefas e no controle dos movimentos voluntários. Qual Lobo Cerebral foi afetado, sendo ele o centro do raciocínio complexo (funções executivas)?",
+                correctAnswer: "Lobo Frontal. Ele é o centro das funções executivas (planejamento, raciocínio) e do controle motor voluntário (Giro Pré-Central).",
+                wordBank: ["Lobo Frontal centro", "funções executivas planejamento", "raciocínio controle motor", "voluntário Giro Pré-Central", "porção anterior cérebro"],
+                correctSequence: ["Lobo Frontal centro", "funções executivas planejamento", "raciocínio controle motor", "voluntário Giro Pré-Central", "porção anterior cérebro"],
+                difficulty: "Médio",
+                points: 15
+            },
+            {
+                id: "case_34",
+                category: "Sensação e Orientação",
+                question: "Um indivíduo perde a capacidade de reconhecer objetos pelo tato e tem dificuldade em se orientar no espaço. Qual Lobo Cerebral é o principal responsável por processar a sensibilidade somática (tato, dor, temperatura, pressão) e a consciência espacial?",
+                correctAnswer: "Lobo Parietal. Ele processa a sensibilidade somática (Giro Pós-Central) e a orientação espacial.",
+                wordBank: ["Lobo Parietal processa", "sensibilidade somática tato", "dor temperatura pressão", "Giro Pós-Central orientação", "espacial consciência espacial"],
+                correctSequence: ["Lobo Parietal processa", "sensibilidade somática tato", "dor temperatura pressão", "Giro Pós-Central orientação", "espacial consciência espacial"],
+                difficulty: "Médio",
+                points: 15
+            },
+            {
+                id: "case_35",
+                category: "Emoções e Memória",
+                question: "Em um estudo de caso sobre o sistema límbico, estruturas como o Hipocampo e o Giro do Cíngulo são cruciais. Qual é a principal função do Giro do Cíngulo nessa área do cérebro, em termos de processamento afetivo?",
+                correctAnswer: "O Giro do Cíngulo é uma parte central do sistema límbico e está envolvido no processamento de emoções, comportamento e regulação da dor.",
+                wordBank: ["Giro do Cíngulo", "parte central sistema", "límbico processamento emoções", "comportamento regulação dor", "processamento afetivo crucial"],
+                correctSequence: ["Giro do Cíngulo", "parte central sistema", "límbico processamento emoções", "comportamento regulação dor", "processamento afetivo crucial"],
+                difficulty: "Médio",
+                points: 15
+            }
+        ];
+
+        let userAnswers = new Map();
+        let currentRecordCount = 0;
+        let currentCaseIndex = 0;
+        let streak = 0;
+        let maxStreak = 0;
+        let shuffledCases = [...cases];
+        let selectedWords = [];
+        let usedWords = new Set();
+        let hintsUsed = 0;
+
+        let thoughtCloudState = 'thinking'; // 'thinking', 'happy', 'confused'
+
+        const dataHandler = {
+            onDataChanged(data) {
+                userAnswers.clear();
+                data.forEach(record => {
+                    userAnswers.set(record.case_id, {
+                        answer: record.user_answer,
+                        isCorrect: record.is_correct,
+                        backendId: record.__backendId
+                    });
+                });
+                currentRecordCount = data.length;
+                updateStats();
+                renderGame();
+            }
+        };
+
+        async function init() {
+            const initResult = await window.dataSdk.init(dataHandler);
+            if (!initResult.isOk) {
+                console.error("Failed to initialize data SDK");
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('current-streak').textContent = streak;
+            document.getElementById('max-streak').textContent = maxStreak;
+            document.getElementById('card-progress').textContent = currentCaseIndex + 1;
+            document.getElementById('total-cards').textContent = shuffledCases.length;
+            updateThoughtCloud();
+            updateWalkingCharacterPosition();
+        }
+        
+        function updateThoughtCloud() {
+            const cloud = document.getElementById('thought-cloud');
+            
+            // Remove existing classes
+            cloud.className = '';
+            
+            // Set new state based on performance
+            if (streak >= 3) {
+                thoughtCloudState = 'happy';
+                cloud.className = 'thought-cloud-happy';
+                cloud.textContent = '🌟';
+            } else if (streak === 0 && maxStreak > 0) {
+                thoughtCloudState = 'confused';
+                cloud.className = 'thought-cloud-confused';
+                cloud.textContent = '😵';
+            } else {
+                thoughtCloudState = 'thinking';
+                cloud.className = 'thought-cloud-thinking';
+                cloud.textContent = '💭';
+            }
+        }
+
+
+
+        function createTrailHouses() {
+            const trailPath = document.getElementById('trail-path');
+            const walkingCharacter = document.getElementById('walking-character');
+            const totalCases = shuffledCases.length;
+            
+            // Clear existing houses (keep walking character)
+            const houses = trailPath.querySelectorAll('.trail-house');
+            houses.forEach(house => house.remove());
+            
+            // Generate scattered positions for all cards
+            const positions = generateScatteredPositions(totalCases, trailPath);
+            
+            // Create house for each case in scattered layout - all visible
+            for (let i = 0; i < totalCases; i++) {
+                const currentCase = shuffledCases[i];
+                const house = document.createElement('div');
+                house.className = 'trail-house';
+                house.id = `house-${i}`;
+                
+                // Position the house at scattered coordinates
+                const position = positions[i];
+                house.style.left = `${position.x}px`;
+                house.style.top = `${position.y}px`;
+                
+                // Add staggered animation delay for floating effect
+                house.style.animationDelay = `${i * 0.1}s`;
+                
+                // Check if this case has been answered
+                const hasAnswer = userAnswers.has(currentCase.id);
+                let statusIcon = '';
+                
+                if (hasAnswer) {
+                    const answer = userAnswers.get(currentCase.id);
+                    if (answer.isCorrect) {
+                        house.classList.add('completed');
+                        statusIcon = '<div class="house-status">✅</div>';
+                    } else {
+                        house.classList.add('incorrect');
+                        statusIcon = '<div class="house-status">❌</div>';
+                    }
+                } else {
+                    // Show available status for unanswered cards
+                    statusIcon = '<div class="house-status">📚</div>';
+                }
+                
+                // Get category icon
+                const categoryIcons = {
+                    'Função': '⚡',
+                    'Homeostase': '🌡️',
+                    'Divisão Anatômica': '🏗️',
+                    'Histologia': '🔬',
+                    'Demanda Metabólica': '⚡',
+                    'Anatomia': '🧠',
+                    'Tipologia': '🔍',
+                    'Mielina': '🛡️',
+                    'Condução': '⚡',
+                    'Sinapse': '🔗',
+                    'Meninges/LCS': '🛡️',
+                    'Substância': '🧪',
+                    'Telencéfalo': '🧠',
+                    'Aprendizado': '📚',
+                    'Medula Terminação': '🦴',
+                    'Tronco Encefálico': '🧠',
+                    'Punção Lombar': '💉',
+                    'Organização SNP': '🔗',
+                    'Revestimento Nervo': '🛡️',
+                    'Substância Medular': '🧪',
+                    'Corno Anterior': '💪',
+                    'Vias Sensitivas': '👋',
+                    'Meninges Espinhais': '🛡️',
+                    'Corno Lateral': '🔄',
+                    'Curiosidade Dor': '🤔',
+                    'Esclerose Múltipla': '⚠️',
+                    'Diencéfalo/Límbico': '🧠',
+                    'Raízes Nervosas': '🌿',
+                    'Tálamo/Hipófise': '🎛️',
+                    'Cerebelo': '🌳',
+                    'Divisão Funcional': '🎯',
+                    'Partes do Encéfalo': '🏛️',
+                    'Raciocínio e Movimento': '🎭',
+                    'Sensação e Orientação': '🗺️',
+                    'Emoções e Memória': '💝'
+                };
+                
+                house.innerHTML = `
+                    ${statusIcon}
+                    <div class="house-number">${i + 1}</div>
+                    <div class="house-category">${currentCase.category}</div>
+                    <div class="house-icon">${categoryIcons[currentCase.category] || '🧠'}</div>
+                `;
+                
+                // Add click handler with touch feedback
+                house.onclick = () => {
+                    // Move character to selected house
+                    moveCharacterToHouse(i);
+                    // Add visual feedback for touch
+                    house.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        house.style.transform = '';
+                        openCard(i);
+                    }, 150);
+                };
+                
+                trailPath.appendChild(house);
+            }
+            
+            // Update walking character position
+            updateWalkingCharacterPosition();
+        }
+        
+        function generateScatteredPositions(count, container) {
+            const positions = [];
+            const containerWidth = 800; // Approximate container width
+            const containerHeight = 400; // Approximate container height
+            const cardWidth = 80;
+            const cardHeight = 100;
+            const minDistance = 120; // Minimum distance between cards
+            const maxAttempts = 100; // Maximum attempts to place each card
+            
+            for (let i = 0; i < count; i++) {
+                let position;
+                let attempts = 0;
+                let validPosition = false;
+                
+                while (!validPosition && attempts < maxAttempts) {
+                    // Generate random position with margins
+                    const x = Math.random() * (containerWidth - cardWidth - 40) + 20;
+                    const y = Math.random() * (containerHeight - cardHeight - 40) + 20;
+                    
+                    position = { x, y };
+                    
+                    // Check if position is far enough from existing positions
+                    validPosition = true;
+                    for (const existingPos of positions) {
+                        const distance = Math.sqrt(
+                            Math.pow(position.x - existingPos.x, 2) + 
+                            Math.pow(position.y - existingPos.y, 2)
+                        );
+                        
+                        if (distance < minDistance) {
+                            validPosition = false;
+                            break;
+                        }
+                    }
+                    
+                    attempts++;
+                }
+                
+                // If we couldn't find a valid position, use a grid fallback
+                if (!validPosition) {
+                    const cols = Math.ceil(Math.sqrt(count));
+                    const row = Math.floor(i / cols);
+                    const col = i % cols;
+                    position = {
+                        x: (col * (containerWidth / cols)) + 20,
+                        y: (row * (containerHeight / Math.ceil(count / cols))) + 20
+                    };
+                }
+                
+                positions.push(position);
+            }
+            
+            return positions;
+        }
+        
+        function updateWalkingCharacterPosition() {
+            const walkingCharacter = document.getElementById('walking-character');
+            const completedCount = Array.from(userAnswers.values()).filter(answer => answer.isCorrect).length;
+            const totalCases = shuffledCases.length;
+            
+            // Update character expression and animation based on progress
+            const progressPercent = Math.min(completedCount / totalCases, 1);
+            
+            if (progressPercent >= 1.0) {
+                walkingCharacter.textContent = '🎓'; // Graduated when all done
+                walkingCharacter.style.animation = 'walkFloat 2s ease-in-out infinite, victoryGlow 1s ease-in-out infinite';
+            } else if (progressPercent >= 0.8) {
+                walkingCharacter.textContent = '🤓'; // Smart when almost done
+                walkingCharacter.style.animation = 'walkFloat 2.5s ease-in-out infinite';
+            } else if (progressPercent >= 0.5) {
+                walkingCharacter.textContent = '🧠'; // Brain when halfway
+                walkingCharacter.style.animation = 'walkFloat 3s ease-in-out infinite';
+            } else if (progressPercent >= 0.2) {
+                walkingCharacter.textContent = '🤔'; // Thinking when starting
+                walkingCharacter.style.animation = 'walkFloat 3.5s ease-in-out infinite';
+            } else {
+                walkingCharacter.textContent = '🚶‍♂️'; // Walking at start
+                walkingCharacter.style.animation = 'walkFloat 4s ease-in-out infinite';
+            }
+        }
+
+        function moveCharacterToHouse(houseIndex) {
+            const walkingCharacter = document.getElementById('walking-character');
+            const targetHouse = document.getElementById(`house-${houseIndex}`);
+            
+            if (!targetHouse) return;
+            
+            // Get house position from its style (since it's absolutely positioned)
+            const houseLeft = parseFloat(targetHouse.style.left) || 0;
+            const houseTop = parseFloat(targetHouse.style.top) || 0;
+            
+            // Center character on the house
+            const characterLeft = houseLeft + 40 - 18; // House width/2 - character width/2
+            const characterTop = houseTop + 50 - 18; // House height/2 - character height/2
+            
+            // Animate character movement
+            walkingCharacter.style.transition = 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            walkingCharacter.style.left = `${characterLeft}px`;
+            walkingCharacter.style.top = `${characterTop}px`;
+            walkingCharacter.style.transform = 'scale(1.2)';
+            
+            // Add walking animation during movement
+            walkingCharacter.style.animation = 'none';
+            setTimeout(() => {
+                walkingCharacter.style.animation = 'walkFloat 0.5s ease-in-out infinite';
+            }, 100);
+            
+            // Reset after movement
+            setTimeout(() => {
+                walkingCharacter.style.transform = 'scale(1)';
+                walkingCharacter.style.transition = '';
+                // Return to center after a delay
+                setTimeout(() => {
+                    walkingCharacter.style.transition = 'all 1s ease-in-out';
+                    walkingCharacter.style.left = '50%';
+                    walkingCharacter.style.top = '50%';
+                    walkingCharacter.style.transform = 'translate(-50%, -50%)';
+                    setTimeout(() => {
+                        walkingCharacter.style.transition = '';
+                        updateWalkingCharacterPosition();
+                    }, 1000);
+                }, 1000);
+            }, 800);
+        }
+
+        function openCard(caseIndex) {
+            currentCaseIndex = caseIndex;
+            const currentCase = shuffledCases[currentCaseIndex];
+            
+            // Update card content
+            document.getElementById('card-category').textContent = currentCase.category;
+            document.getElementById('card-difficulty').textContent = currentCase.difficulty;
+            document.getElementById('card-points').textContent = `${currentCase.points} pts`;
+            document.getElementById('card-title').textContent = `🧠 Caso Clínico ${currentCaseIndex + 1}`;
+            document.getElementById('card-question').textContent = currentCase.question;
+
+            // Set difficulty color
+            const difficultyElement = document.getElementById('card-difficulty');
+            const difficultyColors = {
+                'Fácil': '#10b981',
+                'Médio': '#f59e0b', 
+                'Difícil': '#ef4444'
+            };
+            difficultyElement.style.backgroundColor = difficultyColors[currentCase.difficulty] || '#6b7280';
+
+            // Reset card state
+            document.getElementById('card-modal').style.display = 'flex';
+            document.querySelector('.card-container').classList.remove('flipped');
+            
+            // Clear previous game state
+            selectedWords = [];
+            usedWords.clear();
+            hintsUsed = 0;
+            
+            // Render word bank for the back of the card
+            renderWordBank(currentCase.wordBank);
+            updateAnswerTrail();
+            
+            showToast(`Carta ${caseIndex + 1} revelada! 🎴`, '#667eea');
+        }
+
+        function closeCardModal() {
+            document.getElementById('card-modal').style.display = 'none';
+            createTrailHouses(); // Refresh houses to show updated status
+        }
+
+        function flipCard() {
+            const cardContainer = document.querySelector('.card-container');
+            cardContainer.classList.toggle('flipped');
+            
+            if (cardContainer.classList.contains('flipped')) {
+                showToast('Hora de resolver! 🎯', '#10b981');
+            } else {
+                showToast('Revisando a pergunta 📖', '#3b82f6');
+            }
+        }
+
+
+
+
+
+        function renderWordBank(words) {
+            const wordBank = document.getElementById('word-bank');
+            const shuffledWords = [...words].sort(() => Math.random() - 0.5);
+            
+            wordBank.innerHTML = shuffledWords.map(word => 
+                `<div class="word-chip" onclick="selectWord('${word}')" data-word="${word}">
+                    ${word}
+                </div>`
+            ).join('');
+        }
+
+        function selectWord(word) {
+            if (usedWords.has(word)) return;
+            
+            selectedWords.push(word);
+            usedWords.add(word);
+            
+            // Update word chip appearance
+            const wordChip = document.querySelector(`[data-word="${word}"]`);
+            if (wordChip) {
+                wordChip.classList.add('used');
+            }
+            
+            updateAnswerTrail();
+        }
+
+        function updateAnswerTrail() {
+            const trail = document.getElementById('answer-trail');
+            
+            if (selectedWords.length === 0) {
+                trail.innerHTML = '<div class="trail-placeholder">Clique nas frases abaixo para formar sua resposta...</div>';
+                trail.classList.remove('has-words');
+            } else {
+                trail.classList.add('has-words');
+                trail.innerHTML = selectedWords.map((word, index) => 
+                    `<span class="answer-word" onclick="removeWord(${index})">${word}</span>`
+                ).join('');
+            }
+        }
+
+        function removeWord(index) {
+            const removedWord = selectedWords[index];
+            selectedWords.splice(index, 1);
+            usedWords.delete(removedWord);
+            
+            // Update word chip appearance
+            const wordChip = document.querySelector(`[data-word="${removedWord}"]`);
+            if (wordChip) {
+                wordChip.classList.remove('used');
+            }
+            
+            updateAnswerTrail();
+        }
+
+        function clearTrail() {
+            selectedWords = [];
+            usedWords.clear();
+            
+            // Reset all word chips
+            document.querySelectorAll('.word-chip').forEach(chip => {
+                chip.classList.remove('used');
+            });
+            
+            updateAnswerTrail();
+            showToast('Trilha limpa! 🗑️', '#ef4444');
+        }
+
+        async function checkTrailAnswer() {
+            if (selectedWords.length === 0) {
+                showToast('Selecione algumas frases primeiro!', '#f59e0b');
+                return;
+            }
+
+            if (currentRecordCount >= 999) {
+                showToast('Limite de 999 respostas atingido!', '#ef4444');
+                return;
+            }
+
+            const currentCase = shuffledCases[currentCaseIndex];
+            const userSequence = selectedWords.join(' ');
+            
+            // Check if user sequence matches correct sequence
+            const correctWords = currentCase.correctSequence;
+            const isCorrect = checkSequenceMatch(selectedWords, correctWords);
+            
+            if (isCorrect) {
+                streak++;
+                maxStreak = Math.max(maxStreak, streak);
+                
+                showResultModal(true, currentCase.correctAnswer);
+            } else {
+                streak = 0;
+                showResultModal(false, currentCase.correctAnswer);
+            }
+
+            // Save to data SDK
+            const result = await window.dataSdk.create({
+                case_id: currentCase.id,
+                user_answer: userSequence,
+                is_correct: isCorrect,
+                timestamp: new Date().toISOString()
+            });
+
+            if (result.isOk) {
+                updateStats();
+            }
+        }
+
+        function checkSequenceMatch(userWords, correctWords) {
+            // Check if user selected at least 70% of correct words in any order
+            const correctSet = new Set(correctWords);
+            const userCorrectWords = userWords.filter(word => correctSet.has(word));
+            return userCorrectWords.length >= Math.ceil(correctWords.length * 0.7);
+        }
+
+        function showHint() {
+            const currentCase = shuffledCases[currentCaseIndex];
+            const correctWords = currentCase.correctSequence;
+            
+            // Find next correct word not yet selected
+            const nextWord = correctWords.find(word => !selectedWords.includes(word));
+            
+            if (nextWord) {
+                hintsUsed++;
+                selectWord(nextWord);
+                showToast(`Dica: "${nextWord}" adicionada! 💡`, '#f59e0b');
+            } else {
+                showToast('Todas as frases principais já foram selecionadas!', '#10b981');
+            }
+        }
+
+        function showResultModal(isCorrect, correctAnswer) {
+            const modal = document.getElementById('result-modal');
+            const content = document.getElementById('result-content');
+            
+            if (isCorrect) {
+                content.innerHTML = `
+                    <div style="color: #10b981; font-size: 64px; margin-bottom: 20px;">🎉</div>
+                    <h2 style="color: #10b981; margin-bottom: 16px; font-size: 28px;">Carta Conquistada!</h2>
+                    <p style="margin-bottom: 16px; font-size: 18px;">Você desbloqueou o conhecimento desta carta!</p>
+                    <p style="font-weight: 600; color: #059669; font-size: 16px;">🧠 Sua mente absorveu mais sabedoria! ✨</p>
+                    <div style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); padding: 20px; border-radius: 12px; margin-top: 24px; text-align: left; border: 2px solid #10b981;">
+                        <strong style="color: #065f46;">💡 Conhecimento Completo:</strong><br><br>
+                        <div style="color: #064e3b; line-height: 1.6;">${correctAnswer}</div>
+                    </div>
+                `;
+            } else {
+                content.innerHTML = `
+                    <div style="color: #f59e0b; font-size: 64px; margin-bottom: 20px;">🤔</div>
+                    <h2 style="color: #f59e0b; margin-bottom: 16px; font-size: 28px;">Quase lá!</h2>
+                    <p style="margin-bottom: 16px; font-size: 18px;">Esta carta ainda guarda seus segredos...</p>
+                    <p style="font-weight: 600; color: #d97706; font-size: 16px;">🔍 Continue explorando para desvendar o mistério!</p>
+                    <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 20px; border-radius: 12px; margin-top: 24px; text-align: left; border: 2px solid #f59e0b;">
+                        <strong style="color: #92400e;">📚 Resposta Revelada:</strong><br><br>
+                        <div style="color: #78350f; line-height: 1.6;">${correctAnswer}</div>
+                    </div>
+                `;
+            }
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeResultModal() {
+            document.getElementById('result-modal').style.display = 'none';
+            closeCardModal(); // Close the card and return to house grid
+            showToast('Continue explorando outras cartas! 🗺️', '#667eea');
+        }
+
+        function shuffleCards() {
+            shuffledCases = [...cases].sort(() => Math.random() - 0.5);
+            currentCaseIndex = 0;
+            hintsUsed = 0;
+            
+            // Recreate the houses with new order
+            createTrailHouses();
+            updateStats();
+            showToast('Cartas embaralhadas! Nova aventura! 🔀', '#f59e0b');
+        }
+
+        function resetGame() {
+            currentCaseIndex = 0;
+            streak = 0;
+            maxStreak = 0;
+            hintsUsed = 0;
+            shuffledCases = [...cases];
+            thoughtCloudState = 'thinking';
+            
+            // Reset houses
+            createTrailHouses();
+            updateStats();
+            showToast('Jornada reiniciada! Todas as cartas foram reembaralhadas! 🔄', '#ef4444');
+        }
+
+
+
+
+
+        function showToast(message, color) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.style.backgroundColor = color;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s ease reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Global functions
+        window.shuffleCards = shuffleCards;
+        window.resetGame = resetGame;
+        window.selectWord = selectWord;
+        window.removeWord = removeWord;
+        window.clearTrail = clearTrail;
+        window.checkTrailAnswer = checkTrailAnswer;
+        window.showHint = showHint;
+        window.closeResultModal = closeResultModal;
+        window.openCard = openCard;
+        window.closeCardModal = closeCardModal;
+        window.flipCard = flipCard;
+        window.moveCharacterToHouse = moveCharacterToHouse;
+
+        async function onConfigChange(config) {
+            const baseSize = config.font_size || defaultConfig.font_size;
+            const customFont = config.font_family || defaultConfig.font_family;
+            const baseFontStack = '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+            const fontFamily = `${customFont}, ${baseFontStack}`;
+
+            document.getElementById('main-title').textContent = config.main_title || defaultConfig.main_title;
+            document.getElementById('main-title').style.fontSize = `${baseSize * 2.25}px`;
+            document.getElementById('main-title').style.fontFamily = fontFamily;
+
+            document.getElementById('subtitle').textContent = config.subtitle || defaultConfig.subtitle;
+            document.getElementById('subtitle').style.fontSize = `${baseSize * 1.5}px`;
+            document.getElementById('subtitle').style.fontFamily = fontFamily;
+
+
+
+            const header = document.querySelector('header');
+            header.style.background = `linear-gradient(135deg, ${config.primary_color || defaultConfig.primary_color} 0%, ${adjustColor(config.primary_color || defaultConfig.primary_color, -20)} 100%)`;
+
+            renderTrailGame();
+        }
+
+        function adjustColor(color, percent) {
+            const num = parseInt(color.replace("#",""), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) + amt;
+            const G = (num >> 8 & 0x00FF) + amt;
+            const B = (num & 0x0000FF) + amt;
+            return "#" + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 +
+                (G<255?G<1?0:G:255)*0x100 + (B<255?B<1?0:B:255))
+                .toString(16).slice(1);
+        }
+
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig,
+                onConfigChange,
+                mapToCapabilities: (config) => ({
+                    recolorables: [
+                        {
+                            get: () => config.background_color || defaultConfig.background_color,
+                            set: (value) => {
+                                config.background_color = value;
+                                window.elementSdk.setConfig({ background_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.card_color || defaultConfig.card_color,
+                            set: (value) => {
+                                config.card_color = value;
+                                window.elementSdk.setConfig({ card_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.primary_color || defaultConfig.primary_color,
+                            set: (value) => {
+                                config.primary_color = value;
+                                window.elementSdk.setConfig({ primary_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.text_color || defaultConfig.text_color,
+                            set: (value) => {
+                                config.text_color = value;
+                                window.elementSdk.setConfig({ text_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.accent_color || defaultConfig.accent_color,
+                            set: (value) => {
+                                config.accent_color = value;
+                                window.elementSdk.setConfig({ accent_color: value });
+                            }
+                        }
+                    ],
+                    borderables: [],
+                    fontEditable: {
+                        get: () => config.font_family || defaultConfig.font_family,
+                        set: (value) => {
+                            config.font_family = value;
+                            window.elementSdk.setConfig({ font_family: value });
+                        }
+                    },
+                    fontSizeable: {
+                        get: () => config.font_size || defaultConfig.font_size,
+                        set: (value) => {
+                            config.font_size = value;
+                            window.elementSdk.setConfig({ font_size: value });
+                        }
+                    }
+                }),
+                mapToEditPanelValues: (config) => new Map([
+                    ["main_title", config.main_title || defaultConfig.main_title],
+                    ["subtitle", config.subtitle || defaultConfig.subtitle]
+                ])
+            });
+        }
+
+        // Handle window resize for responsive layout
+        let resizeTimeout;
+        function handleResize() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                createTrailHouses();
+                updateStats();
+            }, 250);
+        }
+
+        // Initialize the game
+        async function initializeGame() {
+            await init();
+            createTrailHouses();
+            updateStats();
+            
+            // Add resize listener for responsive updates
+            window.addEventListener('resize', handleResize);
+            window.addEventListener('orientationchange', () => {
+                setTimeout(handleResize, 500); // Delay for orientation change
+            });
+        }
+
+        initializeGame();
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99a9b48753a9ae1a',t:'MTc2MjQ4NTczNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
