@@ -9,8 +9,6 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#667eea">
   <title>Revisão de Anatomia Humana</title>
-  <script src="/_sdk/data_sdk.js"></script>
-  <script src="/_sdk/element_sdk.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
         body {
@@ -2128,6 +2126,8 @@
         }
     </style>
   <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
  </head>
  <body class="min-h-full"><!-- Floating Ball Elements -->
   <div class="floating-balls">
@@ -2222,20 +2222,6 @@
    </main>
   </div>
   <script>
-        const defaultConfig = {
-            main_title: "Revisão de Anatomia Humana",
-            subtitle: "Sistema Nervoso",
-            professor_name: "",
-            institution: "",
-            background_color: "#f0f9ff",
-            card_color: "#ffffff",
-            primary_color: "#0ea5e9",
-            text_color: "#1e293b",
-            accent_color: "#10b981",
-            font_family: "Inter",
-            font_size: 16
-        };
-
         const cases = [
             {
                 id: "case_1",
@@ -2590,7 +2576,6 @@
         ];
 
         let userAnswers = new Map();
-        let currentRecordCount = 0;
         let currentCaseIndex = 0;
         let streak = 0;
         let maxStreak = 0;
@@ -2601,26 +2586,31 @@
 
         let thoughtCloudState = 'thinking'; // 'thinking', 'happy', 'confused'
 
-        const dataHandler = {
-            onDataChanged(data) {
-                userAnswers.clear();
-                data.forEach(record => {
-                    userAnswers.set(record.case_id, {
-                        answer: record.user_answer,
-                        isCorrect: record.is_correct,
-                        backendId: record.__backendId
-                    });
-                });
-                currentRecordCount = data.length;
-                updateStats();
-                renderGame();
-            }
-        };
+        // LocalStorage functions
+        function saveToLocalStorage() {
+            const gameData = {
+                userAnswers: Array.from(userAnswers.entries()),
+                streak: streak,
+                maxStreak: maxStreak,
+                shuffledCases: shuffledCases,
+                currentCaseIndex: currentCaseIndex
+            };
+            localStorage.setItem('anatomiaGame', JSON.stringify(gameData));
+        }
 
-        async function init() {
-            const initResult = await window.dataSdk.init(dataHandler);
-            if (!initResult.isOk) {
-                console.error("Failed to initialize data SDK");
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('anatomiaGame');
+            if (saved) {
+                try {
+                    const gameData = JSON.parse(saved);
+                    userAnswers = new Map(gameData.userAnswers || []);
+                    streak = gameData.streak || 0;
+                    maxStreak = gameData.maxStreak || 0;
+                    shuffledCases = gameData.shuffledCases || [...cases];
+                    currentCaseIndex = gameData.currentCaseIndex || 0;
+                } catch (e) {
+                    console.error('Erro ao carregar dados salvos:', e);
+                }
             }
         }
 
@@ -2654,8 +2644,6 @@
                 cloud.textContent = '💭';
             }
         }
-
-
 
         function createTrailHouses() {
             const trailPath = document.getElementById('trail-path');
@@ -3017,10 +3005,6 @@
             }
         }
 
-
-
-
-
         function renderWordBank(words) {
             const wordBank = document.getElementById('word-bank');
             const shuffledWords = [...words].sort(() => Math.random() - 0.5);
@@ -3088,14 +3072,9 @@
             showToast('Trilha limpa! 🗑️', '#ef4444');
         }
 
-        async function checkTrailAnswer() {
+        function checkTrailAnswer() {
             if (selectedWords.length === 0) {
                 showToast('Selecione algumas frases primeiro!', '#f59e0b');
-                return;
-            }
-
-            if (currentRecordCount >= 999) {
-                showToast('Limite de 999 respostas atingido!', '#ef4444');
                 return;
             }
 
@@ -3116,17 +3095,14 @@
                 showResultModal(false, currentCase.correctAnswer);
             }
 
-            // Save to data SDK
-            const result = await window.dataSdk.create({
-                case_id: currentCase.id,
-                user_answer: userSequence,
-                is_correct: isCorrect,
-                timestamp: new Date().toISOString()
+            // Save to localStorage
+            userAnswers.set(currentCase.id, {
+                answer: userSequence,
+                isCorrect: isCorrect
             });
-
-            if (result.isOk) {
-                updateStats();
-            }
+            
+            saveToLocalStorage();
+            updateStats();
         }
 
         function checkSequenceMatch(userWords, correctWords) {
@@ -3197,6 +3173,7 @@
             // Recreate the houses with new order
             createTrailHouses();
             updateStats();
+            saveToLocalStorage();
             showToast('Cartas embaralhadas! Nova aventura! 🔀', '#f59e0b');
         }
 
@@ -3207,16 +3184,16 @@
             hintsUsed = 0;
             shuffledCases = [...cases];
             thoughtCloudState = 'thinking';
+            userAnswers.clear();
+            
+            // Clear localStorage
+            localStorage.removeItem('anatomiaGame');
             
             // Reset houses
             createTrailHouses();
             updateStats();
             showToast('Jornada reiniciada! Todas as cartas foram reembaralhadas! 🔄', '#ef4444');
         }
-
-
-
-
 
         function showToast(message, color) {
             const toast = document.createElement('div');
@@ -3245,104 +3222,6 @@
         window.flipCard = flipCard;
         window.moveCharacterToHouse = moveCharacterToHouse;
 
-        async function onConfigChange(config) {
-            const baseSize = config.font_size || defaultConfig.font_size;
-            const customFont = config.font_family || defaultConfig.font_family;
-            const baseFontStack = '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
-            const fontFamily = `${customFont}, ${baseFontStack}`;
-
-            document.getElementById('main-title').textContent = config.main_title || defaultConfig.main_title;
-            document.getElementById('main-title').style.fontSize = `${baseSize * 2.25}px`;
-            document.getElementById('main-title').style.fontFamily = fontFamily;
-
-            document.getElementById('subtitle').textContent = config.subtitle || defaultConfig.subtitle;
-            document.getElementById('subtitle').style.fontSize = `${baseSize * 1.5}px`;
-            document.getElementById('subtitle').style.fontFamily = fontFamily;
-
-
-
-            const header = document.querySelector('header');
-            header.style.background = `linear-gradient(135deg, ${config.primary_color || defaultConfig.primary_color} 0%, ${adjustColor(config.primary_color || defaultConfig.primary_color, -20)} 100%)`;
-
-            renderTrailGame();
-        }
-
-        function adjustColor(color, percent) {
-            const num = parseInt(color.replace("#",""), 16);
-            const amt = Math.round(2.55 * percent);
-            const R = (num >> 16) + amt;
-            const G = (num >> 8 & 0x00FF) + amt;
-            const B = (num & 0x0000FF) + amt;
-            return "#" + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 +
-                (G<255?G<1?0:G:255)*0x100 + (B<255?B<1?0:B:255))
-                .toString(16).slice(1);
-        }
-
-        if (window.elementSdk) {
-            window.elementSdk.init({
-                defaultConfig,
-                onConfigChange,
-                mapToCapabilities: (config) => ({
-                    recolorables: [
-                        {
-                            get: () => config.background_color || defaultConfig.background_color,
-                            set: (value) => {
-                                config.background_color = value;
-                                window.elementSdk.setConfig({ background_color: value });
-                            }
-                        },
-                        {
-                            get: () => config.card_color || defaultConfig.card_color,
-                            set: (value) => {
-                                config.card_color = value;
-                                window.elementSdk.setConfig({ card_color: value });
-                            }
-                        },
-                        {
-                            get: () => config.primary_color || defaultConfig.primary_color,
-                            set: (value) => {
-                                config.primary_color = value;
-                                window.elementSdk.setConfig({ primary_color: value });
-                            }
-                        },
-                        {
-                            get: () => config.text_color || defaultConfig.text_color,
-                            set: (value) => {
-                                config.text_color = value;
-                                window.elementSdk.setConfig({ text_color: value });
-                            }
-                        },
-                        {
-                            get: () => config.accent_color || defaultConfig.accent_color,
-                            set: (value) => {
-                                config.accent_color = value;
-                                window.elementSdk.setConfig({ accent_color: value });
-                            }
-                        }
-                    ],
-                    borderables: [],
-                    fontEditable: {
-                        get: () => config.font_family || defaultConfig.font_family,
-                        set: (value) => {
-                            config.font_family = value;
-                            window.elementSdk.setConfig({ font_family: value });
-                        }
-                    },
-                    fontSizeable: {
-                        get: () => config.font_size || defaultConfig.font_size,
-                        set: (value) => {
-                            config.font_size = value;
-                            window.elementSdk.setConfig({ font_size: value });
-                        }
-                    }
-                }),
-                mapToEditPanelValues: (config) => new Map([
-                    ["main_title", config.main_title || defaultConfig.main_title],
-                    ["subtitle", config.subtitle || defaultConfig.subtitle]
-                ])
-            });
-        }
-
         // Handle window resize for responsive layout
         let resizeTimeout;
         function handleResize() {
@@ -3354,8 +3233,8 @@
         }
 
         // Initialize the game
-        async function initializeGame() {
-            await init();
+        function initializeGame() {
+            loadFromLocalStorage();
             createTrailHouses();
             updateStats();
             
@@ -3368,5 +3247,5 @@
 
         initializeGame();
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99a9f83a9411ae1a',t:'MTc2MjQ4ODUwOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99aa14cea3bdf1af',t:'MTc2MjQ4OTY3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
