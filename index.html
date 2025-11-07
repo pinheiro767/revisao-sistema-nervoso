@@ -9,6 +9,8 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#667eea">
   <title>Revisão de Anatomia Humana</title>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
         body {
@@ -1088,57 +1090,27 @@
         
         /* Mobile-First Responsive Design */
         
-        /* iOS and Touch Optimizations */
-        .trail-house, .word-chip, .answer-word, .control-btn, .card-btn, .flip-btn, .close-card-btn, .result-continue-btn {
+        /* Touch-friendly interactions */
+        .trail-house, .word-chip, .answer-word, .control-btn, .card-btn, .flip-btn {
             -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
+            touch-action: manipulation;
+            user-select: none;
             -webkit-user-select: none;
-            -khtml-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
-            user-select: none;
-            touch-action: manipulation;
-            cursor: pointer;
         }
         
-        /* iOS Safari specific fixes */
-        * {
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        /* Prevent zoom on input focus for iOS */
+        /* Prevent zoom on input focus */
         input, textarea, select {
             font-size: 16px;
-            -webkit-appearance: none;
-            border-radius: 0;
         }
         
-        /* iOS Safe Area handling */
+        /* Safe area handling for iOS */
         body {
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
             padding-left: env(safe-area-inset-left);
             padding-right: env(safe-area-inset-right);
-            -webkit-text-size-adjust: 100%;
-            -ms-text-size-adjust: 100%;
-        }
-        
-        /* iOS viewport fix */
-        html {
-            height: 100%;
-            -webkit-text-size-adjust: 100%;
-        }
-        
-        /* Prevent iOS bounce scrolling */
-        body {
-            overscroll-behavior: none;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        /* iOS button styling fixes */
-        button {
-            -webkit-appearance: none;
-            border-radius: 0;
         }
         
         /* Base mobile styles (320px+) */
@@ -1668,137 +1640,123 @@
         /* Tablet Styles (768px+) */
         @media (min-width: 768px) {
             .floating-header {
-                padding: 18px 28px;
+                padding: 16px 24px;
                 border-radius: 20px;
                 max-width: 90vw;
-                min-width: 450px;
+                min-width: 400px;
             }
             
             .header-content {
-                gap: 28px;
+                gap: 24px;
             }
             
             .header-icon {
-                font-size: 36px;
+                font-size: 32px;
             }
             
             .floating-header h1 {
-                font-size: 22px;
+                font-size: 20px;
             }
             
             .floating-header h2 {
-                font-size: 16px;
-            }
-            
-            .compact-stats {
-                gap: 20px;
-            }
-            
-            .stat-item {
-                font-size: 16px;
-            }
-            
-            .stat-icon {
-                font-size: 18px;
-            }
-            
-            .game-main {
-                padding-top: calc(env(safe-area-inset-top, 0px) + 130px);
-                padding-left: 30px;
-                padding-right: 30px;
-            }
-            
-            .trail-grid {
-                padding: 30px;
-                max-width: 900px;
-            }
-            
-            .trail-header {
-                margin-bottom: 50px;
-                padding: 30px;
-                border-radius: 24px;
-            }
-            
-            .trail-header h3 {
-                font-size: 28px;
-                margin-bottom: 12px;
-            }
-            
-            .trail-header p {
-                font-size: 18px;
-            }
-            
-            .trail-path-container {
-                height: 550px;
-                padding: 50px 30px;
-                margin: 40px 0;
-            }
-            
-            .trail-path {
-                width: 500px;
-                height: 450px;
-                background: radial-gradient(
-                    ellipse at center,
-                    rgba(255, 182, 193, 0.25) 0%,
-                    rgba(221, 160, 221, 0.25) 25%,
-                    rgba(173, 216, 230, 0.25) 50%,
-                    rgba(144, 238, 144, 0.25) 75%,
-                    rgba(255, 218, 185, 0.25) 100%
-                );
-                border: 4px dashed rgba(255, 255, 255, 0.5);
-                border-radius: 25px;
-                box-shadow: 
-                    0 0 50px rgba(255, 255, 255, 0.15),
-                    inset 0 0 50px rgba(255, 255, 255, 0.08);
-                animation: none;
-            }
-            
-            .trail-house {
-                width: 80px;
-                height: 90px;
-                border: 4px solid rgba(255, 255, 255, 0.5);
-                border-radius: 14px;
-                box-shadow: 
-                    0 15px 40px rgba(0, 0, 0, 0.25),
-                    0 0 25px rgba(102, 126, 234, 0.4),
-                    inset 0 3px 12px rgba(255, 255, 255, 0.25);
-            }
-            
-            .house-number {
-                font-size: 16px;
-                margin-bottom: 3px;
-            }
-            
-            .house-category {
-                font-size: 8px;
-                padding: 3px 6px;
-                border-radius: 8px;
-                max-width: 70px;
-                margin-bottom: 3px;
-            }
-            
-            .house-icon {
                 font-size: 14px;
             }
             
+            .compact-stats {
+                gap: 16px;
+            }
+            
+            .stat-item {
+                font-size: 14px;
+            }
+            
+            .stat-icon {
+                font-size: 16px;
+            }
+            
+            .game-main {
+                padding-top: calc(env(safe-area-inset-top, 0px) + 120px);
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            
+            .trail-grid {
+                padding: 20px;
+            }
+            
+            .trail-header {
+                margin-bottom: 40px;
+                padding: 24px;
+                border-radius: 20px;
+            }
+            
+            .trail-header h3 {
+                font-size: 24px;
+                margin-bottom: 8px;
+            }
+            
+            .trail-header p {
+                font-size: 16px;
+            }
+            
+            .trail-path-container {
+                height: 500px;
+                padding: 40px 20px;
+                margin: 30px 0;
+            }
+            
+            .trail-path {
+                width: 400px;
+                height: 400px;
+                border: 4px dashed rgba(255, 255, 255, 0.4);
+                box-shadow: 
+                    0 0 40px rgba(255, 255, 255, 0.1),
+                    inset 0 0 40px rgba(255, 255, 255, 0.05);
+            }
+            
+            .trail-house {
+                width: 70px;
+                height: 70px;
+                border: 4px solid rgba(255, 255, 255, 0.4);
+                box-shadow: 
+                    0 12px 32px rgba(0, 0, 0, 0.3),
+                    0 0 20px rgba(102, 126, 234, 0.4),
+                    inset 0 2px 10px rgba(255, 255, 255, 0.2);
+            }
+            
+            .house-number {
+                font-size: 14px;
+                margin-bottom: 2px;
+            }
+            
+            .house-category {
+                font-size: 7px;
+                padding: 2px 4px;
+                border-radius: 6px;
+                max-width: 60px;
+            }
+            
+            .house-icon {
+                font-size: 12px;
+            }
+            
             .house-status {
-                top: -10px;
-                right: -10px;
-                font-size: 18px;
-                width: 28px;
-                height: 28px;
+                top: -8px;
+                right: -8px;
+                font-size: 16px;
+                width: 24px;
+                height: 24px;
             }
             
             .walking-character {
-                font-size: 42px;
-                filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.6));
+                font-size: 36px;
+                filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5));
             }
             
             .control-btn {
-                padding: 14px 28px;
-                border-radius: 14px;
-                font-size: 16px;
-                min-height: 50px;
+                padding: 12px 24px;
+                border-radius: 12px;
+                font-size: 14px;
             }
             
             .card-container {
@@ -1926,141 +1884,47 @@
         @media (min-width: 1024px) {
             .trail-path-container {
                 height: 600px;
-                padding: 40px 20px;
             }
             
             .trail-path {
-                width: 800px;
+                width: 500px;
                 height: 500px;
-                background: radial-gradient(
-                    ellipse at center,
-                    rgba(255, 182, 193, 0.2) 0%,
-                    rgba(221, 160, 221, 0.2) 25%,
-                    rgba(173, 216, 230, 0.2) 50%,
-                    rgba(144, 238, 144, 0.2) 75%,
-                    rgba(255, 218, 185, 0.2) 100%
-                );
-                border-radius: 30px;
-                border: 3px dashed rgba(255, 255, 255, 0.4);
                 box-shadow: 
                     0 0 50px rgba(255, 255, 255, 0.1),
                     inset 0 0 50px rgba(255, 255, 255, 0.05);
-                animation: none;
             }
             
             .trail-house {
                 width: 90px;
-                height: 110px;
-                border-radius: 16px;
+                height: 90px;
             }
             
             .house-number {
                 font-size: 18px;
-                margin-bottom: 4px;
             }
             
             .house-category {
-                font-size: 9px;
-                max-width: 80px;
+                font-size: 8px;
+                max-width: 70px;
                 border-radius: 8px;
-                padding: 3px 6px;
-                margin-bottom: 4px;
             }
             
             .house-icon {
-                font-size: 18px;
-            }
-            
-            .house-status {
-                top: -10px;
-                right: -10px;
-                width: 28px;
-                height: 28px;
-                font-size: 18px;
+                font-size: 16px;
             }
             
             .walking-character {
                 font-size: 48px;
-                filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.6));
             }
             
             .ball-float {
-                width: 12px;
-                height: 12px;
-            }
-            
-            .floating-header {
-                max-width: 1200px;
-                padding: 20px 32px;
-            }
-            
-            .header-icon {
-                font-size: 36px;
-            }
-            
-            .floating-header h1 {
-                font-size: 24px;
-            }
-            
-            .floating-header h2 {
-                font-size: 16px;
-            }
-            
-            .stat-item {
-                font-size: 16px;
-            }
-            
-            .stat-icon {
-                font-size: 18px;
+                width: 8px;
+                height: 8px;
             }
         }
         
-        /* iPad Specific Optimizations */
-        @media (min-width: 768px) and (max-width: 1024px) {
-            /* iPad Portrait and Landscape */
-            .trail-path {
-                width: 600px;
-                height: 500px;
-            }
-            
-            .trail-house {
-                width: 85px;
-                height: 95px;
-            }
-            
-            .house-number {
-                font-size: 17px;
-            }
-            
-            .house-category {
-                font-size: 9px;
-                max-width: 75px;
-            }
-            
-            .house-icon {
-                font-size: 15px;
-            }
-            
-            .walking-character {
-                font-size: 45px;
-            }
-        }
-        
-        /* iPad Pro Specific */
-        @media (min-width: 1024px) and (max-width: 1366px) {
-            .trail-path {
-                width: 700px;
-                height: 550px;
-            }
-            
-            .trail-house {
-                width: 88px;
-                height: 105px;
-            }
-        }
-        
-        /* Landscape orientation adjustments for phones */
-        @media (orientation: landscape) and (max-height: 600px) and (max-width: 767px) {
+        /* Landscape orientation adjustments */
+        @media (orientation: landscape) and (max-height: 600px) {
             .game-main {
                 padding-top: calc(env(safe-area-inset-top, 0px) + 60px);
             }
@@ -2108,26 +1972,8 @@
                 font-size: 20px;
             }
         }
-        
-        /* iPad Landscape specific */
-        @media (orientation: landscape) and (min-width: 768px) and (max-width: 1024px) {
-            .trail-path-container {
-                height: 450px;
-            }
-            
-            .trail-path {
-                width: 650px;
-                height: 400px;
-            }
-            
-            .game-main {
-                padding-top: calc(env(safe-area-inset-top, 0px) + 100px);
-            }
-        }
     </style>
   <style>@view-transition { navigation: auto; }</style>
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
-  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
  </head>
  <body class="min-h-full"><!-- Floating Ball Elements -->
   <div class="floating-balls">
@@ -2222,6 +2068,20 @@
    </main>
   </div>
   <script>
+        const defaultConfig = {
+            main_title: "Revisão de Anatomia Humana",
+            subtitle: "Sistema Nervoso",
+            professor_name: "",
+            institution: "",
+            background_color: "#f0f9ff",
+            card_color: "#ffffff",
+            primary_color: "#0ea5e9",
+            text_color: "#1e293b",
+            accent_color: "#10b981",
+            font_family: "Inter",
+            font_size: 16
+        };
+
         const cases = [
             {
                 id: "case_1",
@@ -2576,6 +2436,7 @@
         ];
 
         let userAnswers = new Map();
+        let currentRecordCount = 0;
         let currentCaseIndex = 0;
         let streak = 0;
         let maxStreak = 0;
@@ -2586,31 +2447,26 @@
 
         let thoughtCloudState = 'thinking'; // 'thinking', 'happy', 'confused'
 
-        // LocalStorage functions
-        function saveToLocalStorage() {
-            const gameData = {
-                userAnswers: Array.from(userAnswers.entries()),
-                streak: streak,
-                maxStreak: maxStreak,
-                shuffledCases: shuffledCases,
-                currentCaseIndex: currentCaseIndex
-            };
-            localStorage.setItem('anatomiaGame', JSON.stringify(gameData));
-        }
+        const dataHandler = {
+            onDataChanged(data) {
+                userAnswers.clear();
+                data.forEach(record => {
+                    userAnswers.set(record.case_id, {
+                        answer: record.user_answer,
+                        isCorrect: record.is_correct,
+                        backendId: record.__backendId
+                    });
+                });
+                currentRecordCount = data.length;
+                updateStats();
+                renderGame();
+            }
+        };
 
-        function loadFromLocalStorage() {
-            const saved = localStorage.getItem('anatomiaGame');
-            if (saved) {
-                try {
-                    const gameData = JSON.parse(saved);
-                    userAnswers = new Map(gameData.userAnswers || []);
-                    streak = gameData.streak || 0;
-                    maxStreak = gameData.maxStreak || 0;
-                    shuffledCases = gameData.shuffledCases || [...cases];
-                    currentCaseIndex = gameData.currentCaseIndex || 0;
-                } catch (e) {
-                    console.error('Erro ao carregar dados salvos:', e);
-                }
+        async function init() {
+            const initResult = await window.dataSdk.init(dataHandler);
+            if (!initResult.isOk) {
+                console.error("Failed to initialize data SDK");
             }
         }
 
@@ -2644,6 +2500,8 @@
                 cloud.textContent = '💭';
             }
         }
+
+
 
         function createTrailHouses() {
             const trailPath = document.getElementById('trail-path');
@@ -2736,41 +2594,17 @@
                     <div class="house-icon">${categoryIcons[currentCase.category] || '🧠'}</div>
                 `;
                 
-                // Add click handler with enhanced touch feedback for iOS/tablets
+                // Add click handler with touch feedback
                 house.onclick = () => {
-                    // Haptic feedback for iOS devices
-                    if (navigator.vibrate) {
-                        navigator.vibrate(50);
-                    }
-                    
                     // Move character to selected house
                     moveCharacterToHouse(i);
-                    
-                    // Enhanced visual feedback for touch
-                    house.style.transform = 'scale(0.9)';
-                    house.style.filter = 'brightness(1.2)';
-                    
-                    setTimeout(() => {
-                        house.style.transform = '';
-                        house.style.filter = '';
-                        openCard(i);
-                    }, 200);
-                };
-                
-                // Add touch event handlers for better iOS support
-                house.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
+                    // Add visual feedback for touch
                     house.style.transform = 'scale(0.95)';
-                    house.style.filter = 'brightness(1.1)';
-                }, { passive: false });
-                
-                house.addEventListener('touchend', (e) => {
-                    e.preventDefault();
                     setTimeout(() => {
                         house.style.transform = '';
-                        house.style.filter = '';
-                    }, 100);
-                }, { passive: false });
+                        openCard(i);
+                    }, 150);
+                };
                 
                 trailPath.appendChild(house);
             }
@@ -2781,55 +2615,12 @@
         
         function generateScatteredPositions(count, container) {
             const positions = [];
-            
-            // Enhanced device detection
-            const screenWidth = window.innerWidth;
-            const screenHeight = window.innerHeight;
-            const isDesktop = screenWidth >= 1024;
-            const isTablet = screenWidth >= 768 && screenWidth < 1024;
-            const isIPad = /iPad|Macintosh/.test(navigator.userAgent) && 'ontouchend' in document;
-            const isLandscape = screenWidth > screenHeight;
-            
-            let containerWidth, containerHeight, cardWidth, cardHeight, minDistance;
-            
-            if (isDesktop) {
-                containerWidth = 800;
-                containerHeight = 500;
-                cardWidth = 90;
-                cardHeight = 110;
-                minDistance = 130;
-            } else if (isTablet || isIPad) {
-                if (isLandscape) {
-                    containerWidth = 650;
-                    containerHeight = 400;
-                    cardWidth = 85;
-                    cardHeight = 95;
-                    minDistance = 110;
-                } else {
-                    containerWidth = 600;
-                    containerHeight = 500;
-                    cardWidth = 85;
-                    cardHeight = 95;
-                    minDistance = 110;
-                }
-            } else {
-                // Mobile phones
-                if (isLandscape && screenHeight <= 600) {
-                    containerWidth = 250;
-                    containerHeight = 250;
-                    cardWidth = 40;
-                    cardHeight = 40;
-                    minDistance = 60;
-                } else {
-                    containerWidth = 280;
-                    containerHeight = 280;
-                    cardWidth = 50;
-                    cardHeight = 50;
-                    minDistance = 80;
-                }
-            }
-            
-            const maxAttempts = 100;
+            const containerWidth = 800; // Approximate container width
+            const containerHeight = 400; // Approximate container height
+            const cardWidth = 80;
+            const cardHeight = 100;
+            const minDistance = 120; // Minimum distance between cards
+            const maxAttempts = 100; // Maximum attempts to place each card
             
             for (let i = 0; i < count; i++) {
                 let position;
@@ -2838,9 +2629,8 @@
                 
                 while (!validPosition && attempts < maxAttempts) {
                     // Generate random position with margins
-                    const margin = 20;
-                    const x = Math.random() * (containerWidth - cardWidth - margin * 2) + margin;
-                    const y = Math.random() * (containerHeight - cardHeight - margin * 2) + margin;
+                    const x = Math.random() * (containerWidth - cardWidth - 40) + 20;
+                    const y = Math.random() * (containerHeight - cardHeight - 40) + 20;
                     
                     position = { x, y };
                     
@@ -2864,16 +2654,11 @@
                 // If we couldn't find a valid position, use a grid fallback
                 if (!validPosition) {
                     const cols = Math.ceil(Math.sqrt(count));
-                    const rows = Math.ceil(count / cols);
                     const row = Math.floor(i / cols);
                     const col = i % cols;
-                    
-                    const cellWidth = containerWidth / cols;
-                    const cellHeight = containerHeight / rows;
-                    
                     position = {
-                        x: (col * cellWidth) + (cellWidth - cardWidth) / 2,
-                        y: (row * cellHeight) + (cellHeight - cardHeight) / 2
+                        x: (col * (containerWidth / cols)) + 20,
+                        y: (row * (containerHeight / Math.ceil(count / cols))) + 20
                     };
                 }
                 
@@ -3005,6 +2790,10 @@
             }
         }
 
+
+
+
+
         function renderWordBank(words) {
             const wordBank = document.getElementById('word-bank');
             const shuffledWords = [...words].sort(() => Math.random() - 0.5);
@@ -3072,9 +2861,14 @@
             showToast('Trilha limpa! 🗑️', '#ef4444');
         }
 
-        function checkTrailAnswer() {
+        async function checkTrailAnswer() {
             if (selectedWords.length === 0) {
                 showToast('Selecione algumas frases primeiro!', '#f59e0b');
+                return;
+            }
+
+            if (currentRecordCount >= 999) {
+                showToast('Limite de 999 respostas atingido!', '#ef4444');
                 return;
             }
 
@@ -3095,14 +2889,17 @@
                 showResultModal(false, currentCase.correctAnswer);
             }
 
-            // Save to localStorage
-            userAnswers.set(currentCase.id, {
-                answer: userSequence,
-                isCorrect: isCorrect
+            // Save to data SDK
+            const result = await window.dataSdk.create({
+                case_id: currentCase.id,
+                user_answer: userSequence,
+                is_correct: isCorrect,
+                timestamp: new Date().toISOString()
             });
-            
-            saveToLocalStorage();
-            updateStats();
+
+            if (result.isOk) {
+                updateStats();
+            }
         }
 
         function checkSequenceMatch(userWords, correctWords) {
@@ -3173,7 +2970,6 @@
             // Recreate the houses with new order
             createTrailHouses();
             updateStats();
-            saveToLocalStorage();
             showToast('Cartas embaralhadas! Nova aventura! 🔀', '#f59e0b');
         }
 
@@ -3184,16 +2980,16 @@
             hintsUsed = 0;
             shuffledCases = [...cases];
             thoughtCloudState = 'thinking';
-            userAnswers.clear();
-            
-            // Clear localStorage
-            localStorage.removeItem('anatomiaGame');
             
             // Reset houses
             createTrailHouses();
             updateStats();
             showToast('Jornada reiniciada! Todas as cartas foram reembaralhadas! 🔄', '#ef4444');
         }
+
+
+
+
 
         function showToast(message, color) {
             const toast = document.createElement('div');
@@ -3222,6 +3018,104 @@
         window.flipCard = flipCard;
         window.moveCharacterToHouse = moveCharacterToHouse;
 
+        async function onConfigChange(config) {
+            const baseSize = config.font_size || defaultConfig.font_size;
+            const customFont = config.font_family || defaultConfig.font_family;
+            const baseFontStack = '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+            const fontFamily = `${customFont}, ${baseFontStack}`;
+
+            document.getElementById('main-title').textContent = config.main_title || defaultConfig.main_title;
+            document.getElementById('main-title').style.fontSize = `${baseSize * 2.25}px`;
+            document.getElementById('main-title').style.fontFamily = fontFamily;
+
+            document.getElementById('subtitle').textContent = config.subtitle || defaultConfig.subtitle;
+            document.getElementById('subtitle').style.fontSize = `${baseSize * 1.5}px`;
+            document.getElementById('subtitle').style.fontFamily = fontFamily;
+
+
+
+            const header = document.querySelector('header');
+            header.style.background = `linear-gradient(135deg, ${config.primary_color || defaultConfig.primary_color} 0%, ${adjustColor(config.primary_color || defaultConfig.primary_color, -20)} 100%)`;
+
+            renderTrailGame();
+        }
+
+        function adjustColor(color, percent) {
+            const num = parseInt(color.replace("#",""), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) + amt;
+            const G = (num >> 8 & 0x00FF) + amt;
+            const B = (num & 0x0000FF) + amt;
+            return "#" + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 +
+                (G<255?G<1?0:G:255)*0x100 + (B<255?B<1?0:B:255))
+                .toString(16).slice(1);
+        }
+
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig,
+                onConfigChange,
+                mapToCapabilities: (config) => ({
+                    recolorables: [
+                        {
+                            get: () => config.background_color || defaultConfig.background_color,
+                            set: (value) => {
+                                config.background_color = value;
+                                window.elementSdk.setConfig({ background_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.card_color || defaultConfig.card_color,
+                            set: (value) => {
+                                config.card_color = value;
+                                window.elementSdk.setConfig({ card_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.primary_color || defaultConfig.primary_color,
+                            set: (value) => {
+                                config.primary_color = value;
+                                window.elementSdk.setConfig({ primary_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.text_color || defaultConfig.text_color,
+                            set: (value) => {
+                                config.text_color = value;
+                                window.elementSdk.setConfig({ text_color: value });
+                            }
+                        },
+                        {
+                            get: () => config.accent_color || defaultConfig.accent_color,
+                            set: (value) => {
+                                config.accent_color = value;
+                                window.elementSdk.setConfig({ accent_color: value });
+                            }
+                        }
+                    ],
+                    borderables: [],
+                    fontEditable: {
+                        get: () => config.font_family || defaultConfig.font_family,
+                        set: (value) => {
+                            config.font_family = value;
+                            window.elementSdk.setConfig({ font_family: value });
+                        }
+                    },
+                    fontSizeable: {
+                        get: () => config.font_size || defaultConfig.font_size,
+                        set: (value) => {
+                            config.font_size = value;
+                            window.elementSdk.setConfig({ font_size: value });
+                        }
+                    }
+                }),
+                mapToEditPanelValues: (config) => new Map([
+                    ["main_title", config.main_title || defaultConfig.main_title],
+                    ["subtitle", config.subtitle || defaultConfig.subtitle]
+                ])
+            });
+        }
+
         // Handle window resize for responsive layout
         let resizeTimeout;
         function handleResize() {
@@ -3233,8 +3127,8 @@
         }
 
         // Initialize the game
-        function initializeGame() {
-            loadFromLocalStorage();
+        async function initializeGame() {
+            await init();
             createTrailHouses();
             updateStats();
             
@@ -3247,5 +3141,5 @@
 
         initializeGame();
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99aa14cea3bdf1af',t:'MTc2MjQ4OTY3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
-</html>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99aa2dece6cbf1af',t:'MTc2MjQ5MDcwOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ </html>
