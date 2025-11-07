@@ -1090,27 +1090,57 @@
         
         /* Mobile-First Responsive Design */
         
-        /* Touch-friendly interactions */
-        .trail-house, .word-chip, .answer-word, .control-btn, .card-btn, .flip-btn {
+        /* iOS and Touch Optimizations */
+        .trail-house, .word-chip, .answer-word, .control-btn, .card-btn, .flip-btn, .close-card-btn, .result-continue-btn {
             -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
-            user-select: none;
+            -webkit-touch-callout: none;
             -webkit-user-select: none;
+            -khtml-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
+            cursor: pointer;
         }
         
-        /* Prevent zoom on input focus */
+        /* iOS Safari specific fixes */
+        * {
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Prevent zoom on input focus for iOS */
         input, textarea, select {
             font-size: 16px;
+            -webkit-appearance: none;
+            border-radius: 0;
         }
         
-        /* Safe area handling for iOS */
+        /* iOS Safe Area handling */
         body {
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
             padding-left: env(safe-area-inset-left);
             padding-right: env(safe-area-inset-right);
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+        
+        /* iOS viewport fix */
+        html {
+            height: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+        
+        /* Prevent iOS bounce scrolling */
+        body {
+            overscroll-behavior: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* iOS button styling fixes */
+        button {
+            -webkit-appearance: none;
+            border-radius: 0;
         }
         
         /* Base mobile styles (320px+) */
@@ -1640,123 +1670,137 @@
         /* Tablet Styles (768px+) */
         @media (min-width: 768px) {
             .floating-header {
-                padding: 16px 24px;
+                padding: 18px 28px;
                 border-radius: 20px;
                 max-width: 90vw;
-                min-width: 400px;
+                min-width: 450px;
             }
             
             .header-content {
-                gap: 24px;
+                gap: 28px;
             }
             
             .header-icon {
-                font-size: 32px;
+                font-size: 36px;
             }
             
             .floating-header h1 {
-                font-size: 20px;
+                font-size: 22px;
             }
             
             .floating-header h2 {
-                font-size: 14px;
+                font-size: 16px;
             }
             
             .compact-stats {
-                gap: 16px;
+                gap: 20px;
             }
             
             .stat-item {
-                font-size: 14px;
+                font-size: 16px;
             }
             
             .stat-icon {
-                font-size: 16px;
+                font-size: 18px;
             }
             
             .game-main {
-                padding-top: calc(env(safe-area-inset-top, 0px) + 120px);
-                padding-left: 20px;
-                padding-right: 20px;
+                padding-top: calc(env(safe-area-inset-top, 0px) + 130px);
+                padding-left: 30px;
+                padding-right: 30px;
             }
             
             .trail-grid {
-                padding: 20px;
+                padding: 30px;
+                max-width: 900px;
             }
             
             .trail-header {
-                margin-bottom: 40px;
-                padding: 24px;
-                border-radius: 20px;
+                margin-bottom: 50px;
+                padding: 30px;
+                border-radius: 24px;
             }
             
             .trail-header h3 {
-                font-size: 24px;
-                margin-bottom: 8px;
+                font-size: 28px;
+                margin-bottom: 12px;
             }
             
             .trail-header p {
-                font-size: 16px;
+                font-size: 18px;
             }
             
             .trail-path-container {
-                height: 500px;
-                padding: 40px 20px;
-                margin: 30px 0;
+                height: 550px;
+                padding: 50px 30px;
+                margin: 40px 0;
             }
             
             .trail-path {
-                width: 400px;
-                height: 400px;
-                border: 4px dashed rgba(255, 255, 255, 0.4);
+                width: 500px;
+                height: 450px;
+                background: radial-gradient(
+                    ellipse at center,
+                    rgba(255, 182, 193, 0.25) 0%,
+                    rgba(221, 160, 221, 0.25) 25%,
+                    rgba(173, 216, 230, 0.25) 50%,
+                    rgba(144, 238, 144, 0.25) 75%,
+                    rgba(255, 218, 185, 0.25) 100%
+                );
+                border: 4px dashed rgba(255, 255, 255, 0.5);
+                border-radius: 25px;
                 box-shadow: 
-                    0 0 40px rgba(255, 255, 255, 0.1),
-                    inset 0 0 40px rgba(255, 255, 255, 0.05);
+                    0 0 50px rgba(255, 255, 255, 0.15),
+                    inset 0 0 50px rgba(255, 255, 255, 0.08);
+                animation: none;
             }
             
             .trail-house {
-                width: 70px;
-                height: 70px;
-                border: 4px solid rgba(255, 255, 255, 0.4);
+                width: 80px;
+                height: 90px;
+                border: 4px solid rgba(255, 255, 255, 0.5);
+                border-radius: 14px;
                 box-shadow: 
-                    0 12px 32px rgba(0, 0, 0, 0.3),
-                    0 0 20px rgba(102, 126, 234, 0.4),
-                    inset 0 2px 10px rgba(255, 255, 255, 0.2);
+                    0 15px 40px rgba(0, 0, 0, 0.25),
+                    0 0 25px rgba(102, 126, 234, 0.4),
+                    inset 0 3px 12px rgba(255, 255, 255, 0.25);
             }
             
             .house-number {
-                font-size: 14px;
-                margin-bottom: 2px;
+                font-size: 16px;
+                margin-bottom: 3px;
             }
             
             .house-category {
-                font-size: 7px;
-                padding: 2px 4px;
-                border-radius: 6px;
-                max-width: 60px;
+                font-size: 8px;
+                padding: 3px 6px;
+                border-radius: 8px;
+                max-width: 70px;
+                margin-bottom: 3px;
             }
             
             .house-icon {
-                font-size: 12px;
+                font-size: 14px;
             }
             
             .house-status {
-                top: -8px;
-                right: -8px;
-                font-size: 16px;
-                width: 24px;
-                height: 24px;
+                top: -10px;
+                right: -10px;
+                font-size: 18px;
+                width: 28px;
+                height: 28px;
             }
             
             .walking-character {
-                font-size: 36px;
-                filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5));
+                font-size: 42px;
+                filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.6));
             }
             
             .control-btn {
-                padding: 12px 24px;
-                border-radius: 12px;
-                font-size: 14px;
+                padding: 14px 28px;
+                border-radius: 14px;
+                font-size: 16px;
+                min-height: 50px;
             }
             
             .card-container {
@@ -1884,47 +1928,141 @@
         @media (min-width: 1024px) {
             .trail-path-container {
                 height: 600px;
+                padding: 40px 20px;
             }
             
             .trail-path {
-                width: 500px;
+                width: 800px;
                 height: 500px;
+                background: radial-gradient(
+                    ellipse at center,
+                    rgba(255, 182, 193, 0.2) 0%,
+                    rgba(221, 160, 221, 0.2) 25%,
+                    rgba(173, 216, 230, 0.2) 50%,
+                    rgba(144, 238, 144, 0.2) 75%,
+                    rgba(255, 218, 185, 0.2) 100%
+                );
+                border-radius: 30px;
+                border: 3px dashed rgba(255, 255, 255, 0.4);
                 box-shadow: 
                     0 0 50px rgba(255, 255, 255, 0.1),
                     inset 0 0 50px rgba(255, 255, 255, 0.05);
+                animation: none;
             }
             
             .trail-house {
                 width: 90px;
-                height: 90px;
+                height: 110px;
+                border-radius: 16px;
             }
             
             .house-number {
                 font-size: 18px;
+                margin-bottom: 4px;
             }
             
             .house-category {
-                font-size: 8px;
-                max-width: 70px;
+                font-size: 9px;
+                max-width: 80px;
                 border-radius: 8px;
+                padding: 3px 6px;
+                margin-bottom: 4px;
             }
             
             .house-icon {
-                font-size: 16px;
+                font-size: 18px;
+            }
+            
+            .house-status {
+                top: -10px;
+                right: -10px;
+                width: 28px;
+                height: 28px;
+                font-size: 18px;
             }
             
             .walking-character {
                 font-size: 48px;
+                filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.6));
             }
             
             .ball-float {
-                width: 8px;
-                height: 8px;
+                width: 12px;
+                height: 12px;
+            }
+            
+            .floating-header {
+                max-width: 1200px;
+                padding: 20px 32px;
+            }
+            
+            .header-icon {
+                font-size: 36px;
+            }
+            
+            .floating-header h1 {
+                font-size: 24px;
+            }
+            
+            .floating-header h2 {
+                font-size: 16px;
+            }
+            
+            .stat-item {
+                font-size: 16px;
+            }
+            
+            .stat-icon {
+                font-size: 18px;
             }
         }
         
-        /* Landscape orientation adjustments */
-        @media (orientation: landscape) and (max-height: 600px) {
+        /* iPad Specific Optimizations */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            /* iPad Portrait and Landscape */
+            .trail-path {
+                width: 600px;
+                height: 500px;
+            }
+            
+            .trail-house {
+                width: 85px;
+                height: 95px;
+            }
+            
+            .house-number {
+                font-size: 17px;
+            }
+            
+            .house-category {
+                font-size: 9px;
+                max-width: 75px;
+            }
+            
+            .house-icon {
+                font-size: 15px;
+            }
+            
+            .walking-character {
+                font-size: 45px;
+            }
+        }
+        
+        /* iPad Pro Specific */
+        @media (min-width: 1024px) and (max-width: 1366px) {
+            .trail-path {
+                width: 700px;
+                height: 550px;
+            }
+            
+            .trail-house {
+                width: 88px;
+                height: 105px;
+            }
+        }
+        
+        /* Landscape orientation adjustments for phones */
+        @media (orientation: landscape) and (max-height: 600px) and (max-width: 767px) {
             .game-main {
                 padding-top: calc(env(safe-area-inset-top, 0px) + 60px);
             }
@@ -1970,6 +2108,22 @@
             
             .walking-character {
                 font-size: 20px;
+            }
+        }
+        
+        /* iPad Landscape specific */
+        @media (orientation: landscape) and (min-width: 768px) and (max-width: 1024px) {
+            .trail-path-container {
+                height: 450px;
+            }
+            
+            .trail-path {
+                width: 650px;
+                height: 400px;
+            }
+            
+            .game-main {
+                padding-top: calc(env(safe-area-inset-top, 0px) + 100px);
             }
         }
     </style>
@@ -2594,17 +2748,41 @@
                     <div class="house-icon">${categoryIcons[currentCase.category] || '🧠'}</div>
                 `;
                 
-                // Add click handler with touch feedback
+                // Add click handler with enhanced touch feedback for iOS/tablets
                 house.onclick = () => {
+                    // Haptic feedback for iOS devices
+                    if (navigator.vibrate) {
+                        navigator.vibrate(50);
+                    }
+                    
                     // Move character to selected house
                     moveCharacterToHouse(i);
-                    // Add visual feedback for touch
-                    house.style.transform = 'scale(0.95)';
+                    
+                    // Enhanced visual feedback for touch
+                    house.style.transform = 'scale(0.9)';
+                    house.style.filter = 'brightness(1.2)';
+                    
                     setTimeout(() => {
                         house.style.transform = '';
+                        house.style.filter = '';
                         openCard(i);
-                    }, 150);
+                    }, 200);
                 };
+                
+                // Add touch event handlers for better iOS support
+                house.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    house.style.transform = 'scale(0.95)';
+                    house.style.filter = 'brightness(1.1)';
+                }, { passive: false });
+                
+                house.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    setTimeout(() => {
+                        house.style.transform = '';
+                        house.style.filter = '';
+                    }, 100);
+                }, { passive: false });
                 
                 trailPath.appendChild(house);
             }
@@ -2615,12 +2793,55 @@
         
         function generateScatteredPositions(count, container) {
             const positions = [];
-            const containerWidth = 800; // Approximate container width
-            const containerHeight = 400; // Approximate container height
-            const cardWidth = 80;
-            const cardHeight = 100;
-            const minDistance = 120; // Minimum distance between cards
-            const maxAttempts = 100; // Maximum attempts to place each card
+            
+            // Enhanced device detection
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            const isDesktop = screenWidth >= 1024;
+            const isTablet = screenWidth >= 768 && screenWidth < 1024;
+            const isIPad = /iPad|Macintosh/.test(navigator.userAgent) && 'ontouchend' in document;
+            const isLandscape = screenWidth > screenHeight;
+            
+            let containerWidth, containerHeight, cardWidth, cardHeight, minDistance;
+            
+            if (isDesktop) {
+                containerWidth = 800;
+                containerHeight = 500;
+                cardWidth = 90;
+                cardHeight = 110;
+                minDistance = 130;
+            } else if (isTablet || isIPad) {
+                if (isLandscape) {
+                    containerWidth = 650;
+                    containerHeight = 400;
+                    cardWidth = 85;
+                    cardHeight = 95;
+                    minDistance = 110;
+                } else {
+                    containerWidth = 600;
+                    containerHeight = 500;
+                    cardWidth = 85;
+                    cardHeight = 95;
+                    minDistance = 110;
+                }
+            } else {
+                // Mobile phones
+                if (isLandscape && screenHeight <= 600) {
+                    containerWidth = 250;
+                    containerHeight = 250;
+                    cardWidth = 40;
+                    cardHeight = 40;
+                    minDistance = 60;
+                } else {
+                    containerWidth = 280;
+                    containerHeight = 280;
+                    cardWidth = 50;
+                    cardHeight = 50;
+                    minDistance = 80;
+                }
+            }
+            
+            const maxAttempts = 100;
             
             for (let i = 0; i < count; i++) {
                 let position;
@@ -2629,8 +2850,9 @@
                 
                 while (!validPosition && attempts < maxAttempts) {
                     // Generate random position with margins
-                    const x = Math.random() * (containerWidth - cardWidth - 40) + 20;
-                    const y = Math.random() * (containerHeight - cardHeight - 40) + 20;
+                    const margin = 20;
+                    const x = Math.random() * (containerWidth - cardWidth - margin * 2) + margin;
+                    const y = Math.random() * (containerHeight - cardHeight - margin * 2) + margin;
                     
                     position = { x, y };
                     
@@ -2654,11 +2876,16 @@
                 // If we couldn't find a valid position, use a grid fallback
                 if (!validPosition) {
                     const cols = Math.ceil(Math.sqrt(count));
+                    const rows = Math.ceil(count / cols);
                     const row = Math.floor(i / cols);
                     const col = i % cols;
+                    
+                    const cellWidth = containerWidth / cols;
+                    const cellHeight = containerHeight / rows;
+                    
                     position = {
-                        x: (col * (containerWidth / cols)) + 20,
-                        y: (row * (containerHeight / Math.ceil(count / cols))) + 20
+                        x: (col * cellWidth) + (cellWidth - cardWidth) / 2,
+                        y: (row * cellHeight) + (cellHeight - cardHeight) / 2
                     };
                 }
                 
@@ -3141,5 +3368,5 @@
 
         initializeGame();
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99a9b48753a9ae1a',t:'MTc2MjQ4NTczNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99a9f83a9411ae1a',t:'MTc2MjQ4ODUwOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
